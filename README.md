@@ -22,7 +22,13 @@ sudo nixos-rebuild switch --flake '/etc/nixos/#<host-name>' --upgrade
 > This command also performs an upgrade of all system packages, if this is not intended the ```--upgrade``` flag should be removed.
 > For more information look at: [NixOS docs](https://nixos.wiki/wiki/flakes)
 
-### Contribution guidelines
+### Secure boot with lanzaboote
+WIP
+
+### disk encryption with nixos
+WIP
+
+## Contribution guidelines
 
 This repository uses [convetional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).<br/>
 Just feel free to leave a PR and I might merge it! :D
