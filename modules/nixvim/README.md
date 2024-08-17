@@ -1,6 +1,6 @@
 # Nixvim template
 
-This template gives you a good starting point for configuring nixvim standalone.
+My nixvim configuration
 
 ## Configuring
 
@@ -12,6 +12,14 @@ If you add a new configuration file, remember to add it to the
 
 To test your configuration simply run the following command
 
-```
+```bash
 nix run .
+```
+
+## Usage
+
+This configuration is currently hardcoded to the home-manager configurations and can be used from there.
+Just simply run any ```neovim``` command.
+```bash
+nvim .
 ```
