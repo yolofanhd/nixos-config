@@ -7,11 +7,11 @@ This is my nixos config. It's intended for the use of 2 devices. A 3rd configura
   the goal is to keep those configurations at a bare minimum and import everything thats needed from other modules
 
 - **modules**\
-  contain a basic setup for application and their configurations\
+  contain a basic setup for application and their configurations
   - **home**\
-    contains setup for home-manager specific stuff\
-  - **nixvim**\
-    might get refactored to its own repo in the future\
+    contains setup for home-manager specific stuff
+  - **[nixvim](./modules/nixvim/README.md)**\
+    might get refactored to its own repo in the future
 
 ## Installation and setup
 As this configuration utilizes flakes it is fairly simple to install and setup:
