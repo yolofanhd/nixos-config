@@ -162,12 +162,8 @@ in
   nixpkgs = {
     config.allowUnfree = true; # allows unfree packages (spotify, etc.)
     overlays = [
-<<<<<<< HEAD
-      (final: prev: { flutter = prev.flutter319; }) # Temporary flutter patch TODO: Remove when fixed
-=======
       #TODO: Remove temporary fixes when resolved
       (_final: prev: { flutter = prev.flutter319; }) #INFO: Temporary flutter patch
->>>>>>> 2dcccb3 (chore: created .gitignore and removed possible private data)
     ];
   };
 
