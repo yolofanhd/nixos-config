@@ -1,4 +1,4 @@
-# Nixvim template
+# Nixvim
 
 My nixvim configuration
 
