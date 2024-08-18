@@ -1,17 +1,19 @@
 # This config contains settings about nvidia and other graphics
 # related stuff
-{ config, lib, pkgs, inputs, ... }:
+{ config
+, lib
+, pkgs
+, inputs
+, ...
+}: {
+  services.xserver.videoDrivers = [ "nvidia" ];
 
-{
-  services.xserver.videoDrivers = ["nvidia"];
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
     extraPackages = with pkgs; [
-        vaapiVdpau
-        libvdpau-va-gl
-        nvidia-vaapi-driver
+      vaapiVdpau
+      libvdpau-va-gl
+      nvidia-vaapi-driver
     ];
   };
 
@@ -23,4 +25,3 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 }
-

@@ -84,7 +84,7 @@ in
       services.gdm.enableGnomeKeyring = true;
       u2f = {
         enable = true;
-        cue = true;
+        settings.cue = true;
         control = "sufficient";
       };
       services = {
@@ -132,7 +132,6 @@ in
       bitwarden
       xplorer
       discord
-      cinny-desktop
       ungoogled-chromium
       vimPlugins.coc-clangd
     ];
@@ -162,8 +161,6 @@ in
   nixpkgs = {
     config.allowUnfree = true; # allows unfree packages (spotify, etc.)
     overlays = [
-      #TODO: Remove temporary fixes when resolved
-      (_final: prev: { flutter = prev.flutter319; }) #INFO: Temporary flutter patch
     ];
   };
 

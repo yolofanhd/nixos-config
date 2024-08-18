@@ -1,10 +1,13 @@
 # This config holds Yubikey related stuff
-{ config, lib, pkgs, inputs, ... }:
-
-{
+{ config
+, lib
+, pkgs
+, inputs
+, ...
+}: {
   security.pam.u2f = {
     enable = true;
-    cue = true;
+    settings.cue = true;
     control = "sufficient";
   };
   security.pam.services = {
@@ -14,4 +17,3 @@
   };
   services.pcscd.enable = true;
 }
-

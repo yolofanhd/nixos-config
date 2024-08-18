@@ -1,16 +1,19 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   plugins = {
-
-     # Buffer bar
+    # Buffer bar
     bufferline = {
       enable = true;
-      diagnostics = true;
-      offsets = [{
-        filetype = "neo-tree";
-        text = "File Explorer";
-        text_align = "left";
-        separator = true;
-      }];
+      settings.options = {
+        diagnostics = "nvim_lsp";
+        offsets = [
+          {
+            filetype = "neo-tree";
+            text = "File Explorer";
+            text_align = "left";
+            separator = true;
+          }
+        ];
+      };
     };
 
     # Status bar
@@ -36,7 +39,7 @@
     none-ls = {
       enable = true;
       settings = {
-        cmd = ["bash -c nvim"];
+        cmd = [ "bash -c nvim" ];
         debug = true;
       };
       sources = {
@@ -62,12 +65,11 @@
           };
           black = {
             enable = true;
-            withArgs = ''
+            settings = ''
               {
                 extra_args = { "--fast" },
               }
             '';
-
           };
         };
         completion = {
@@ -77,7 +79,7 @@
       };
     };
 
-     # Notify
+    # Notify
     notify = {
       enable = true;
       backgroundColour = "#1e1e2e";
@@ -114,7 +116,7 @@
         dap-ui = {
           enable = true;
           floating.mappings = {
-            close = ["<ESC>" "q"];
+            close = [ "<ESC>" "q" ];
           };
         };
         dap-virtual-text = {
@@ -138,16 +140,16 @@
     lint = {
       enable = true;
       lintersByFt = {
-        text = ["vale"];
-        json = ["jsonlint"];
-        markdown = ["vale"];
-        rst = ["vale"];
-        ruby = ["ruby"];
-        janet = ["janet"];
-        inko = ["inko"];
-        clojure = ["clj-kondo"];
-        dockerfile = ["hadolint"];
-        terraform = ["tflint"];
+        text = [ "vale" ];
+        json = [ "jsonlint" ];
+        markdown = [ "vale" ];
+        rst = [ "vale" ];
+        ruby = [ "ruby" ];
+        janet = [ "janet" ];
+        inko = [ "inko" ];
+        clojure = [ "clj-kondo" ];
+        dockerfile = [ "hadolint" ];
+        terraform = [ "tflint" ];
       };
     };
 
@@ -194,7 +196,7 @@
       settings.current_line_blame = true;
     };
 
-     # Markdown preview server
+    # Markdown preview server
     markdown-preview = {
       enable = true;
       settings.theme = "dark";
@@ -222,7 +224,7 @@
             "^target/"
             "^build/"
             "%.ipynb"
-         ];
+          ];
         };
       };
     };
@@ -231,16 +233,16 @@
     todo-comments = {
       enable = true;
       colors = {
-        error = ["DiagnosticError" "ErrorMsg" "#DC2626"];
-        warning = ["DiagnosticWarn" "WarningMsg" "#FBBF24"];
-        info = ["DiagnosticInfo" "#2563EB"];
-        hint = ["DiagnosticHint" "#10B981"];
-        default = ["Identifier" "#7C3AED"];
-        test = ["Identifier" "#FF00FF"];
+        error = [ "DiagnosticError" "ErrorMsg" "#DC2626" ];
+        warning = [ "DiagnosticWarn" "WarningMsg" "#FBBF24" ];
+        info = [ "DiagnosticInfo" "#2563EB" ];
+        hint = [ "DiagnosticHint" "#10B981" ];
+        default = [ "Identifier" "#7C3AED" ];
+        test = [ "Identifier" "#FF00FF" ];
       };
     };
 
-     # File tree
+    # File tree
     neo-tree = {
       enable = true;
       enableDiagnostics = true;
@@ -320,7 +322,7 @@
             procMacro = {
               enable = true;
               ignored = {
-                leptos_macro = ["server" "component"];
+                leptos_macro = [ "server" "component" ];
               };
             };
           };
@@ -368,20 +370,20 @@
       autoEnableSources = false;
       settings = {
         mapping = {
-           __raw = ''
-             cmp.mapping.preset.insert({
-              ["<C-Space>"] = cmp.mapping.complete(),
-              ["<C-n>"] = cmp.mapping.select_next_item(),
-              ["<C-p>"] = cmp.mapping.select_prev_item(),
-              ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-              ["<C-f>"] = cmp.mapping.scroll_docs(4),
-              ["<C-e>"] = cmp.mapping.close(),
-              ["<C-y>"] = cmp.mapping.confirm({
-                  behavior = cmp.ConfirmBehavior.Insert,
-                  select = true
-                })
-              })
-             '';
+          __raw = ''
+            cmp.mapping.preset.insert({
+             ["<C-Space>"] = cmp.mapping.complete(),
+             ["<C-n>"] = cmp.mapping.select_next_item(),
+             ["<C-p>"] = cmp.mapping.select_prev_item(),
+             ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+             ["<C-f>"] = cmp.mapping.scroll_docs(4),
+             ["<C-e>"] = cmp.mapping.close(),
+             ["<C-y>"] = cmp.mapping.confirm({
+                 behavior = cmp.ConfirmBehavior.Insert,
+                 select = true
+               })
+             })
+          '';
         };
         snippet = {
           expand = "function(args) require('luasnip').lsp_expand(args.body) end";
@@ -420,7 +422,7 @@
       enable = true;
     };
   };
-  
+
   colorschemes.gruvbox = {
     enable = true;
     settings = {
@@ -429,11 +431,8 @@
     };
   };
 
-  extraPlugins = with pkgs.vimPlugins;
-  [
+  extraPlugins = with pkgs.vimPlugins; [
     nvim-web-devicons
     clipboard-image-nvim
   ];
 }
-
-
