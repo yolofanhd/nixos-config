@@ -169,21 +169,16 @@ _: {
         preserve_split = true; # you probably want this
       };
 
-      master = {
-        new_is_master = true;
-      };
-
       gestures = {
         workspace_swipe = true;
         workspace_swipe_touch = true;
-        #workspace_swipe_touch_invert=true #added in later git version not in nixpkgs yet TODO: Upgrade when released
+        workspace_swipe_touch_invert = false;
       };
 
       misc = {
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         render_ahead_of_time = false;
-        no_direct_scanout = true;
         vrr = 2;
       };
       input = {
