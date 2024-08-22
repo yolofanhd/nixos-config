@@ -1,32 +1,28 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-{ config
-, lib
-, pkgs
+{ pkgs
 , inputs
 , username
+, system
 , ...
-}: {
+}:
+let
+  modulePrefix = ./../../modules;
+in
+{
   imports = [
-    ./../../modules/wayland.nix
-    ./../../modules/sound.nix
-    ./../../modules/nvidia.nix
-    ./../../modules/yubikey.nix
-    ./../../modules/greetd.nix
-    ./../../modules/dbus.nix
-    ./../../modules/network.nix
-    ./../../modules/boot.nix
-    ./../../modules/bluetooth.nix
+    (modulePrefix + /wayland.nix)
+    (modulePrefix + /sound.nix)
+    (modulePrefix + /nvidia.nix)
+    (modulePrefix + /yubikey.nix)
+    (modulePrefix + /greetd.nix)
+    (modulePrefix + /dbus.nix)
+    (modulePrefix + /network.nix)
+    (modulePrefix + /bluetooth.nix)
+    (modulePrefix + /systemd.nix)
+    (modulePrefix + /boot.nix)
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
   ];
 
-  # Temporary fix for yubioauth-flutter not working
-  nixpkgs.overlays = [ (final: prev: { flutter = prev.flutter319; }) ];
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true; # allows unfree packages (spotify, etc.)
   time.timeZone = "Europe/Vienna";
 
   i18n.defaultLocale = "en_US.UTF-8";
@@ -36,6 +32,7 @@
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
     shell = pkgs.zsh;
     packages = with pkgs; [
+      inputs.zen-browser.packages."x86_64-linux".default
       firefox
       tree
       obs-studio
@@ -52,17 +49,9 @@
       bitwarden
       xplorer
       discord
-      cinny-desktop
       ungoogled-chromium
       vimPlugins.coc-clangd
     ];
-  };
-
-  home-manager = {
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      ${username} = import ./home.nix;
-    };
   };
 
   environment.systemPackages = with pkgs; [
@@ -75,44 +64,58 @@
     docker
     gcc
     pinentry-curses
+    python3
   ];
 
-  security.polkit.enable = true;
-
-  systemd = {
-    user.services.polkit-gnome-authentication-agent-1 = {
-      description = "polkit-gnome-authentication-agent-1";
-      wantedBy = [ "graphical-session.target" ];
-      wants = [ "graphical-session.target" ];
-      after = [ "graphical-session.target" ];
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-        Restart = "on-failure";
-        RestartSec = 1;
-        TimeoutStopSec = 10;
+  security = {
+    tpm2 = {
+      enable = true;
+      pkcs11.enable = true;
+      tctiEnvironment.enable = true;
+    };
+    polkit.enable = true;
+    pam = {
+      services.gdm.enableGnomeKeyring = true;
+      services = {
+        hyprlock = { };
       };
     };
-    extraConfig = ''
-      DefaultTimeoutStopSec=10s
-    '';
   };
 
   programs.zsh.enable = true;
-  system.autoUpgrade.enable = true;
-  system.autoUpgrade.allowReboot = true;
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
-  };
-
   services.pcscd.enable = true;
   programs.gnupg.agent = {
     enable = true;
     pinentryPackage = pkgs.pinentry-curses;
     enableSSHSupport = true;
   };
-  security.pam.services.gdm.enableGnomeKeyring = true;
-  system.stateVersion = "23.11"; # DO NOT! EDIT!!
+
+  home-manager = {
+    extraSpecialArgs = {
+      inherit inputs;
+      inherit username;
+      inherit system;
+    };
+    backupFileExtension = "backup";
+    users = {
+      ${username} = import ./home.nix;
+    };
+  };
+
+  nix = {
+    settings.experimental-features = [ "nix-command" "flakes" ];
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+  };
+
+  nixpkgs = {
+    config.allowUnfree = true; # allows unfree packages (spotify, etc.)
+    overlays = [
+    ];
+  };
+
+  system.stateVersion = "23.11"; #WARN: DO NOT! EDIT!!
 }

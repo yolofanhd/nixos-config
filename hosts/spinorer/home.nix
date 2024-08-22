@@ -9,19 +9,21 @@ in
 {
   imports = [
     (prefix + /dunst.nix)
-    (prefix + /hyprland.nix)
+    (import (prefix + /hyprland.nix) {
+      monitor = ",highrr,auto,1.6";
+    })
     (prefix + /tmux.nix)
-    (prefix + /waybar.nix)
+    (prefix + /waybar-topbar.nix)
     (prefix + /wofi.nix)
     (prefix + /zsh.nix)
     (prefix + /kitty.nix)
   ];
 
   nixpkgs.config.allowUnfree = true;
-  programs.home-manager.enable = true; # Lets home manager handle itself
+  programs.home-manager.enable = true;
 
   home = {
-    username = "${username}";
+    inherit username;
     homeDirectory = "/home/${username}";
     packages = with pkgs; [
       kitty

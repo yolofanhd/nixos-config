@@ -3,17 +3,17 @@
     # Buffer bar
     bufferline = {
       enable = true;
-      settings.options = {
-        diagnostics = "nvim_lsp";
-        offsets = [
-          {
-            filetype = "neo-tree";
-            text = "File Explorer";
-            text_align = "left";
-            separator = true;
-          }
-        ];
-      };
+      # settings.options = {
+      #   diagnostics = "nvim_lsp";
+      #   offsets = [
+      #     {
+      #       filetype = "neo-tree";
+      #       text = "File Explorer";
+      #       text_align = "left";
+      #       separator = true;
+      #     }
+      #   ];
+      # };
     };
 
     # Status bar
@@ -65,11 +65,11 @@
           };
           black = {
             enable = true;
-            settings = ''
-              {
-                extra_args = { "--fast" },
-              }
-            '';
+            # settings = ''
+            #   {
+            #     extra_args = { "--fast" },
+            #   }
+            # '';
           };
         };
         completion = {

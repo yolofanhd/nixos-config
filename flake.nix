@@ -22,6 +22,8 @@
       url = "github:nix-community/lanzaboote/v0.3.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
 
   outputs =
@@ -33,7 +35,7 @@
         arithmancer = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
-            system = "x84_64-linux";
+            system = "x86_64-linux";
             hostname = "arithmancer";
             username = "fractalix";
           };
@@ -46,7 +48,7 @@
         spinorer = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
-            system = "x84_64-linux";
+            system = "x86_64-linux";
             hostname = "spinorer";
             username = "vectorix";
           };

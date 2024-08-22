@@ -2,7 +2,6 @@
 , inputs
 , username
 , system
-, hostname
 , ...
 }:
 let
@@ -10,7 +9,6 @@ let
 in
 {
   imports = [
-    # Include the results of the hardware scan.)
     (modulePrefix + /wayland.nix)
     (modulePrefix + /sound.nix)
     (modulePrefix + /nvidia.nix)
@@ -57,10 +55,6 @@ in
     };
   };
   time.timeZone = "Europe/Vienna";
-
-  # Networking
-  networking.networkmanager.enable = true;
-  networking.hostName = "${hostname}";
 
   i18n.defaultLocale = "en_US.UTF-8";
 
@@ -164,5 +158,5 @@ in
     ];
   };
 
-  system.stateVersion = "23.11"; #INFO: DO NOT! EDIT!!
+  system.stateVersion = "23.11"; #WARN: DO NOT! EDIT!!
 }

@@ -1,4 +1,4 @@
-_: {
+{ monitor, ... }: {
   services.hypridle = {
     enable = true;
     settings = {
@@ -98,7 +98,7 @@ _: {
     enable = true;
     systemd.enable = true;
     settings = {
-      monitor = ",highrr,auto,1.875";
+      inherit monitor;
       env = [
         "MOZ_ENABLE_WAYLAND,1"
         "MOZ_DISABLE_RDD_SANDBOX,1"
@@ -255,6 +255,7 @@ _: {
         ", XF86AudioMute, exec, pulseaudio-ctl mute"
         ", XF86Calculator, exec, wxmaxima"
         ", Print, exec, wayshot -s \"$(slurp)\" --stdout | wl-copy"
+        "bind = $mainMod SHIFT, P, exec, wayshot -s \"$(slurp)\" --stdout | wl-copy"
       ];
       bindm = [
         # Move/resize windows with mainMod + LMB/RMB and dragging
