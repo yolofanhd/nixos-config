@@ -22,6 +22,8 @@
       url = "github:nix-community/lanzaboote/v0.3.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    rpi5-flake.url = "git+https://gitlab.com/vriska/nix-rpi5.git";
   };
 
   outputs =
@@ -54,6 +56,18 @@
             ./hosts/spinorer/configuration.nix
             inputs.home-manager.nixosModules.default
             #lanzaboote.nixosModules.lanzaboote # Secure boot
+          ];
+        };
+        rpi5 = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            system = "aarch64-linux";
+            hostname = "rpi5";
+            username = "pi";
+          };
+          modules = [
+            ./hosts/rpi5/configuration.nix
+            inputs.home-manager.nixosModules.default
           ];
         };
       };
