@@ -5,7 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 
-    myvim.url = "./modules/nixvim";
+    myvim.url = "github:yolofanhd/nixvim-config";
 
     home-manager = {
       url = "github:nix-community/home-manager";
