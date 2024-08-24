@@ -1,8 +1,7 @@
-
-{ config, lib, pkgs, inputs, hostname, ... }:
+{ hostname, ... }:
 
 {
-  networking.networkmanager.enable = true; 
+  networking.networkmanager.enable = true;
   networking.hostName = hostname;
 
   # Open ports in the firewall.

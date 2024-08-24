@@ -23,6 +23,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
     rpi5-flake.url = "git+https://gitlab.com/vriska/nix-rpi5.git";
   };
 
@@ -35,7 +36,7 @@
         arithmancer = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
-            system = "x84_64-linux";
+            system = "x86_64-linux";
             hostname = "arithmancer";
             username = "fractalix";
           };
@@ -48,7 +49,7 @@
         spinorer = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
-            system = "x84_64-linux";
+            system = "x86_64-linux";
             hostname = "spinorer";
             username = "vectorix";
           };
