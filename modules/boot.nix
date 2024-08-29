@@ -21,7 +21,7 @@
       pkiBundle = "/etc/secureboot";
     };
 
-    initrd.luks.devices."root" = {
+    initrd.luks.devices."cryptroot" = {
       device = "/dev/disk/by-uuid/${rootDeviceUuid}";
       preLVM = true;
       allowDiscards = true;

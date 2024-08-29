@@ -39,12 +39,12 @@
             system = "x86_64-linux";
             hostName = "arithmancer";
             username = "fractalix";
-            rootDevice = "65eec619-2d7c-45e3-b905-898f4ee59be8";
+            rootDeviceUuid = "65eec619-2d7c-45e3-b905-898f4ee59be8";
           };
           modules = [
             ./hosts/arithmancer/configuration.nix
             inputs.home-manager.nixosModules.default
-            lanzaboote.nixosModules.lanzaboote # Secure boot
+            lanzaboote.nixosModules.lanzaboote
           ];
         };
         spinorer = nixpkgs.lib.nixosSystem {
@@ -53,11 +53,12 @@
             system = "x86_64-linux";
             hostName = "spinorer";
             username = "vectorix";
+            rootDeviceUuid = "4a76637d-da9f-4eb9-a278-532252a1d104";
           };
           modules = [
             ./hosts/spinorer/configuration.nix
             inputs.home-manager.nixosModules.default
-            #lanzaboote.nixosModules.lanzaboote # Secure boot
+            lanzaboote.nixosModules.lanzaboote
           ];
         };
         rpi5 = nixpkgs.lib.nixosSystem {

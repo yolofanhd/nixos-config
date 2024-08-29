@@ -18,6 +18,7 @@ in
     (modulePrefix + /network.nix)
     (modulePrefix + /bluetooth.nix)
     (modulePrefix + /systemd.nix)
+    (modulePrefix + /boot.nix)
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
   ];
@@ -31,31 +32,8 @@ in
     };
   };
 
-  boot.kernelParams = [ "intel_pstate=no_hwp" ];
-
   fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];
 
-  boot = {
-    # lanzaboote = {
-    #   enable = true;
-    #   pkiBundle = "/etc/secureboot";
-    # };
-    loader = {
-      systemd-boot = {
-        # Lanzaboote currently replaces the systemd-boot module.
-        # This setting is usually set to true in configuration.nix
-        # generated at installation time. So we force it to false
-        # for now.
-        #enable = lib.mkForce false;
-        enable = true;
-        consoleMode = "auto";
-      };
-      efi = {
-        efiSysMountPoint = "/boot";
-        canTouchEfiVariables = true;
-      };
-    };
-  };
   time.timeZone = "Europe/Vienna";
 
   i18n.defaultLocale = "en_US.UTF-8";
@@ -68,11 +46,11 @@ in
   };
 
   security = {
-    # tpm2 = {
-    #   enable = true;
-    #   pkcs11.enable = true;
-    #   tctiEnvironment.enable = true;
-    # };
+    tpm2 = {
+      enable = true;
+      pkcs11.enable = true;
+      tctiEnvironment.enable = true;
+    };
     polkit.enable = true;
     pam = {
       services.gdm.enableGnomeKeyring = true;
