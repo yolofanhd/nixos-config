@@ -126,8 +126,35 @@ Here is a step by step introction:
 7. Check if everything is correctly setup with `bootctl status`
 
 ### disk encryption with nixos
+Check out these 2 guides: [NixOS Wiki](https://nixos.wiki/wiki/Full_Disk_Encryption), [NixOS with encrypted root](https://gist.github.com/martijnvermaat/76f2e24d0239470dd71050358b4d5134)\
+A quick summary:
+1. Get your nixos usb stick and boot up the installation media
+2. Create the encrypted partition using `cryptsetup luksFormat /dev/sda2` and open it with `cryptsetup luksOpen /dev/sda2 enc-pv`
+3. Create logical volumes on the created partition using pvcreate
+   - `/dev/mapper/enc-pv`
+   - `vgcreate vg /dev/mapper/enc-pv`
+   - Create swap `lvcreate -L 8G -n swap vg`
+   - Create root `lvcreate -l '100%FREE' -n root vg`
+4. Format the partitions
+   - `mkfs.fat /dev/sda1`
+   - Format encrypted root volume `mkfs.ext4 -L root /dev/vg/root`
+   - Format encrypted swap volume `mkswap -L swap /dev/vg/swap`
+5. Mount the volumes
+   - `mount /dev/vg/root /mnt`
+   - `mkdir /mnt/boot`
+   - `mount /dev/sda1 /mnt/boot`
+   - `swapon /dev/vg/swap`
+6. Proceed with the usual installation
+> [!NOTE]
+> Keep in mind when troubleshooting that the luks device needs to be open.
+> Once created it can be opened with the second command mentioned in step 2.
+> When working with the volumes keep in mind that the name doesn't match with the
+> physical partition name, so just be sure to always use the provided name from
+> the mapper!\
+> There also is another setting for encrypted devices in the [boot.nix](./modules/boot.nix)
+> file. It just ensures that the device is used and can safely be ignored due to automatic
+> generation. (e.g. the same setting is set anyway in `hardware-configuration.nix`)
 
-WIP
 
 ## Contribution guidelines
 
