@@ -32,16 +32,12 @@ in
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
     shell = pkgs.zsh;
     packages = with pkgs; [
-      inputs.zen-browser.packages."x86_64-linux".default
+      inputs.zen-browser.packages.${system}.default
       firefox
-      tree
       obs-studio
       yubioath-flutter
       waybar
       signal-desktop
-      unzip
-      zip
-      htop
       gimp
       blender
       vscodium
@@ -55,7 +51,12 @@ in
   };
 
   environment.systemPackages = with pkgs; [
+    htop
+    btop
     sbctl # For secureboot debugging stuff
+    unzip
+    tree
+    zip
     vim
     wget
     cmake

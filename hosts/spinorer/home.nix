@@ -1,5 +1,4 @@
 { pkgs
-, inputs
 , username
 , ...
 }:
@@ -22,37 +21,18 @@ in
   nixpkgs.config.allowUnfree = true;
   programs.home-manager.enable = true;
 
+  # Only contains packages related to home configuration
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
     packages = with pkgs; [
       kitty
-      zsh
-      tmux
-
-      git
-
-      firefox
-      spotify
-      obsidian
-
-      cheat # for cheatsheets and stuff
       swww
-
-      wl-clipboard
       slurp
+      tmux
       wayshot
-
-      anki-bin
-      texlive.combined.scheme-full
-
-      zathura
-
-      inputs.myvim.packages."x86_64-linux".default
-
-      (pkgs.nerdfonts.override {
-        fonts = [ "FantasqueSansMono" ];
-      })
+      wl-clipboard
+      zsh
     ];
 
     file = { };

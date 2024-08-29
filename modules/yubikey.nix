@@ -1,10 +1,5 @@
 # This config holds Yubikey related stuff
-{ config
-, lib
-, pkgs
-, inputs
-, ...
-}: {
+_: {
   security.pam.u2f = {
     enable = true;
     settings.cue = true;

@@ -125,7 +125,7 @@
       exec-once = [
         "waybar"
         "[ workspace 1 silent ] kitty"
-        "[ workspace 2 silent ] firefox"
+        "[ workspace 2 silent ] zen"
         "[ workspace 3 silent ] spotify"
         "[ workspace 3 silent ] discord"
         "[ workspace 3 silent ] signal-desktop"

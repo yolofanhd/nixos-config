@@ -1,14 +1,12 @@
-# This package holds a few configurations for dbus
-{ config, lib, pkgs, inputs, ... }:
-
-{
-  services.dbus.enable = true;
-
-  services.dbus.packages = with pkgs; [dconf];
-  services.udev.packages = with pkgs; [gnome.gnome-settings-daemon];
+{ pkgs, ... }: {
+  services.dbus = {
+    enable = true;
+    packages = with pkgs; [ dconf ];
+  };
+  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
 
   environment = {
-     loginShellInit = ''
+    loginShellInit = ''
       dbus-update-activation-environment --systemd DISPLAY
     '';
   };
