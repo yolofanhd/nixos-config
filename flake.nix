@@ -37,8 +37,9 @@
           specialArgs = {
             inherit inputs;
             system = "x86_64-linux";
-            hostname = "arithmancer";
+            hostName = "arithmancer";
             username = "fractalix";
+            rootDevice = "65eec619-2d7c-45e3-b905-898f4ee59be8";
           };
           modules = [
             ./hosts/arithmancer/configuration.nix
@@ -50,7 +51,7 @@
           specialArgs = {
             inherit inputs;
             system = "x86_64-linux";
-            hostname = "spinorer";
+            hostName = "spinorer";
             username = "vectorix";
           };
           modules = [
@@ -63,7 +64,7 @@
           specialArgs = {
             inherit inputs;
             system = "aarch64-linux";
-            hostname = "rpi5";
+            hostName = "rpi5";
             username = "pi";
           };
           modules = [

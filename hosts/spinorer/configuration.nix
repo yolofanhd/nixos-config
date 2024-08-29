@@ -22,11 +22,13 @@ in
     inputs.home-manager.nixosModules.default
   ];
 
-  services.fprintd.enable = true;
-  services.fprintd.tod = {
+  services.fprintd = {
     enable = true;
-    driver = pkgs.libfprint-2-tod1-vfs0090;
-    #driver = pkgs.libfprint-2-tod1-goodix; # Goodix driver module
+    tod = {
+      enable = true;
+      driver = pkgs.libfprint-2-tod1-vfs0090;
+      #driver = pkgs.libfprint-2-tod1-goodix; # Goodix driver module
+    };
   };
 
   boot.kernelParams = [ "intel_pstate=no_hwp" ];
@@ -57,8 +59,6 @@ in
   time.timeZone = "Europe/Vienna";
 
   i18n.defaultLocale = "en_US.UTF-8";
-
-  # services.printing.enable = true; # enables cups for printing service
 
   services.pcscd.enable = true;
   programs.gnupg.agent = {
@@ -93,15 +93,25 @@ in
   programs.zsh.enable = true;
 
   environment.systemPackages = with pkgs; [
-    sbctl # For secureboot debugging stuff
-    vim
-    wget
+    btop
+    cheat
     cmake
+    docker
+    htop
+    gcc
+    git
     polkit
     polkit_gnome
-    docker
-    gcc
     pinentry-curses
+    sbctl # For secureboot debugging stuff
+    texlive.combined.scheme-full
+    tree
+    vim
+    vimPlugins.coc-clangd
+    wget
+    (pkgs.nerdfonts.override {
+      fonts = [ "FantasqueSansMono" ];
+    })
   ];
 
   users.users.${username} = {
@@ -109,25 +119,29 @@ in
     extraGroups = [ "wheel" "tss" "docker" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
-      firefox
-      tree
-      obs-studio
-      yubioath-flutter
-      wofi
-      waybar
-      signal-desktop
-      unzip
-      zip
-      htop
-      gimp
-      blender
-      vscodium
-      docker
+      anki-bin
       bitwarden
-      xplorer
+      brightnessctl
+      blender
       discord
+      docker
+      firefox
+      gimp
+      inputs.myvim.packages.${system}.default
+      obs-studio
+      obsidian
+      signal-desktop
+      spotify
       ungoogled-chromium
-      vimPlugins.coc-clangd
+      unzip
+      vscodium
+      waybar
+      wofi
+      xplorer
+      yubioath-flutter
+      inputs.zen-browser.packages.${system}.default
+      zathura
+      zip
     ];
   };
 

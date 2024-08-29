@@ -1,8 +1,4 @@
-# This config holds stuff about greetd
-{ config
-, lib
-, pkgs
-, inputs
+{ pkgs
 , username
 , ...
 }: {

@@ -1,9 +1,5 @@
-# This config contains settings about nvidia and other graphics
-# related stuff
 { config
-, lib
 , pkgs
-, inputs
 , ...
 }: {
   services.xserver.videoDrivers = [ "nvidia" ];

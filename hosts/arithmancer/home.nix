@@ -51,7 +51,7 @@ in
 
       steam
 
-      inputs.myvim.packages."${system}".default
+      inputs.myvim.packages.${system}.default
 
       (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
     ];
