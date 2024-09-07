@@ -41,9 +41,6 @@ If any error occurs when updating or building feel free to open an issue or a pr
 
 ```bash
 sudo nix flake update
-```
-
-```bash
 sudo nixos-rebuild switch --flake './#<host-name>'
 ```
 
@@ -99,9 +96,6 @@ Allthough there are a few options that have to be set:
 
 ```nix
   boot.loader.efi.canTouchEfiVariables = false;
-```
-
-```nix
   boot.kernelPackages = (import (builtins.fetchTarball https://gitlab.com/vriska/nix-rpi5/-/archive/main.tar.gz)).legacyPackages.aarch64-linux.linuxPackages_rpi5;
 ```
 
@@ -142,21 +136,21 @@ Check out these 2 guides: [NixOS Wiki](https://nixos.wiki/wiki/Full_Disk_Encrypt
 A quick summary:
 1. Get your nixos usb stick and boot up the installation media
 2. Create the encrypted partition using `cryptsetup luksFormat /dev/sda2` and open it with `cryptsetup luksOpen /dev/sda2 enc-pv`
-3. Create logical volumes on the created partition using pvcreate
-   - `/dev/mapper/enc-pv`
+3. Create logical volumes on the created partition
+   - `pvcreate /dev/mapper/enc-pv`
    - `vgcreate vg /dev/mapper/enc-pv`
    - Create swap `lvcreate -L 8G -n swap vg`
    - Create root `lvcreate -l '100%FREE' -n root vg`
-4. Format the partitions
+5. Format the partitions
    - `mkfs.fat /dev/sda1`
    - Format encrypted root volume `mkfs.ext4 -L root /dev/vg/root`
    - Format encrypted swap volume `mkswap -L swap /dev/vg/swap`
-5. Mount the volumes
+6. Mount the volumes
    - `mount /dev/vg/root /mnt`
    - `mkdir /mnt/boot`
    - `mount /dev/sda1 /mnt/boot`
    - `swapon /dev/vg/swap`
-6. Proceed with the usual installation
+7. Proceed with the usual installation
 > [!NOTE]
 > Keep in mind when troubleshooting that the luks device needs to be open.
 > Once created it can be opened with the second command mentioned in step 2.
