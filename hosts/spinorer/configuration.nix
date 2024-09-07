@@ -5,6 +5,7 @@
 , ...
 }:
 let
+  rootPrefix = ./../..;
   modulePrefix = ./../../modules;
 in
 {
@@ -18,100 +19,29 @@ in
     (modulePrefix + /network.nix)
     (modulePrefix + /bluetooth.nix)
     (modulePrefix + /systemd.nix)
-    ./hardware-configuration.nix
+    (modulePrefix + /boot.nix)
+    (modulePrefix + /nix-defaults.nix)
+    (rootPrefix + /hardware-configuration.nix)
     inputs.home-manager.nixosModules.default
   ];
 
-  services.fprintd = {
-    enable = true;
-    tod = {
-      enable = true;
-      driver = pkgs.libfprint-2-tod1-vfs0090;
-      #driver = pkgs.libfprint-2-tod1-goodix; # Goodix driver module
-    };
-  };
-
-  boot.kernelParams = [ "intel_pstate=no_hwp" ];
-
-  fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];
-
-  boot = {
-    # lanzaboote = {
-    #   enable = true;
-    #   pkiBundle = "/etc/secureboot";
-    # };
-    loader = {
-      systemd-boot = {
-        # Lanzaboote currently replaces the systemd-boot module.
-        # This setting is usually set to true in configuration.nix
-        # generated at installation time. So we force it to false
-        # for now.
-        #enable = lib.mkForce false;
-        enable = true;
-        consoleMode = "auto";
-      };
-      efi = {
-        efiSysMountPoint = "/boot";
-        canTouchEfiVariables = true;
-      };
-    };
-  };
-  time.timeZone = "Europe/Vienna";
-
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  services.pcscd.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-curses;
-    enableSSHSupport = true;
-  };
-
-  security = {
-    # tpm2 = {
-    #   enable = true;
-    #   pkcs11.enable = true;
-    #   tctiEnvironment.enable = true;
-    # };
-    polkit.enable = true;
-    pam = {
-      services.gdm.enableGnomeKeyring = true;
-      u2f = {
-        enable = true;
-        settings.cue = true;
-        control = "sufficient";
-      };
-      services = {
-        greetd.u2fAuth = true;
-        login.u2fAuth = true;
-        sudo.u2fAuth = true;
-        hyprlock = { };
-      };
-    };
-  };
-
-  programs.zsh.enable = true;
-
   environment.systemPackages = with pkgs; [
     btop
-    cheat
     cmake
     docker
-    htop
     gcc
     git
+    htop
+    pinentry-curses
     polkit
     polkit_gnome
-    pinentry-curses
-    sbctl # For secureboot debugging stuff
+    sbctl
     texlive.combined.scheme-full
     tree
     vim
     vimPlugins.coc-clangd
     wget
-    (pkgs.nerdfonts.override {
-      fonts = [ "FantasqueSansMono" ];
-    })
+    (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
   ];
 
   users.users.${username} = {
@@ -123,8 +53,10 @@ in
       bitwarden
       brightnessctl
       blender
+      cheat
       discord
       docker
+      element-desktop
       firefox
       gimp
       inputs.myvim.packages.${system}.default
@@ -147,6 +79,7 @@ in
 
   home-manager = {
     extraSpecialArgs = {
+      inherit modulePrefix;
       inherit inputs;
       inherit username;
       inherit system;
@@ -157,20 +90,15 @@ in
     };
   };
 
-  nix = {
-    settings.experimental-features = [ "nix-command" "flakes" ];
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-curses;
+    enableSSHSupport = true;
   };
 
-  nixpkgs = {
-    config.allowUnfree = true; # allows unfree packages (spotify, etc.)
-    overlays = [
-    ];
-  };
+  programs.zsh.enable = true;
 
-  system.stateVersion = "23.11"; #WARN: DO NOT! EDIT!!
+  time.timeZone = "Europe/Vienna";
+  i18n.defaultLocale = "en_US.UTF-8";
+  system.stateVersion = "24.11"; # WARN: DO NOT! EDIT!!
 }

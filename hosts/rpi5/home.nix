@@ -17,6 +17,7 @@ in
     tmux
   ];
 
+  programs.home-manager.enable = true;
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
@@ -26,5 +27,4 @@ in
     };
     stateVersion = "24.11"; #WARN: Do NOT! edit!!
   };
-  programs.home-manager.enable = true;
 }

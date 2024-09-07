@@ -1,5 +1,5 @@
 {
-  description = "YoloFanHD's nixos config";
+  description = "YoloFan's nixos config";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -39,7 +39,6 @@
             system = "x86_64-linux";
             hostName = "arithmancer";
             username = "fractalix";
-            rootDevice = "65eec619-2d7c-45e3-b905-898f4ee59be8";
           };
           modules = [
             ./hosts/arithmancer/configuration.nix

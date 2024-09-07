@@ -116,7 +116,6 @@
         "LIBVA_DRIVER_NAME,nvidia"
         "__GL_GSYNC_ALLOWED,1"
         "__GL_VRR_ALLOWED,0"
-        #"SDL_VIDEODRIVER,wayland"
         "_JAVA_AWT_WM_NONEREPARENTING,1"
         "CLUTTER_BACKEND,wayland"
         "GDK_BACKEND,wayland"
@@ -195,7 +194,6 @@
       };
       "$mainMod" = "ALT";
       bind = [
-        # keybinds"
         "ALT SHIFT,Q,exit,"
         "$mainMod,Q,exec,hyprlock"
         "$mainMod,S,exec,wofi --show drun"
@@ -254,6 +252,8 @@
         ", XF86AudioRaiseVolume, exec, pulseaudio-ctl up"
         ", XF86AudioMute, exec, pulseaudio-ctl mute"
         ", XF86Calculator, exec, wxmaxima"
+
+        # Screenshots, need slurp, wayshot, wl-copy
         ", Print, exec, wayshot -s \"$(slurp)\" --stdout | wl-copy"
         "bind = $mainMod SHIFT, P, exec, wayshot -s \"$(slurp)\" --stdout | wl-copy"
       ];

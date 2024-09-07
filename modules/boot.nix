@@ -1,7 +1,12 @@
-{ lib
-, rootDeviceUuid
-, ...
-}: {
+{ lib, ... }: {
+  security = {
+    tpm2 = {
+      enable = true;
+      pkcs11.enable = true;
+      tctiEnvironment.enable = true;
+    };
+  };
+
   boot = {
     kernelParams = [
       "intel_pstate=no_hwp"
@@ -10,7 +15,7 @@
     ];
 
     loader.efi.canTouchEfiVariables = true;
-    # Lanzaboote currently replaces the systemd-boot module.
+    # NOTE: Lanzaboote currently replaces the systemd-boot module.
     # This setting is usually set to true in configuration.nix
     # generated at installation time. So we force it to false
     # for now.
@@ -21,18 +26,10 @@
       pkiBundle = "/etc/secureboot";
     };
 
-    initrd.luks.devices."root" = {
-      device = "/dev/disk/by-uuid/${rootDeviceUuid}";
+    initrd.luks.devices."cryptroot" = {
       preLVM = true;
       allowDiscards = true;
     };
-
-    kernelModules = [
-      "nvidia"
-      "nvidia_modeset"
-      "nvidia_uvm"
-      "nvidia_drm"
-    ];
   };
 
   fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];
