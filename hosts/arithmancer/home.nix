@@ -61,7 +61,8 @@ in
     sessionVariables = {
       EDITOR = "nvim";
     };
-
-    stateVersion = "23.11"; # DO NOT! EDIT!!
+    nixpkgs.config.allowUnfree = true;
+    programs.home-manager.enable = true;
+    stateVersion = "24.11"; # WARN: DO NOT! EDIT!!
   };
 }

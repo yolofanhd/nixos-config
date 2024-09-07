@@ -23,10 +23,6 @@ in
     inputs.home-manager.nixosModules.default
   ];
 
-  time.timeZone = "Europe/Vienna";
-
-  i18n.defaultLocale = "en_US.UTF-8";
-
   users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
@@ -103,20 +99,7 @@ in
     };
   };
 
-  nix = {
-    settings.experimental-features = [ "nix-command" "flakes" ];
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
-  };
-
-  nixpkgs = {
-    config.allowUnfree = true; # allows unfree packages (spotify, etc.)
-    overlays = [
-    ];
-  };
-
-  system.stateVersion = "23.11"; #WARN: DO NOT! EDIT!!
+  time.timeZone = "Europe/Vienna";
+  i18n.defaultLocale = "en_US.UTF-8";
+  system.stateVersion = "24.11"; #WARN: DO NOT! EDIT!!
 }

@@ -24,7 +24,7 @@ in
     sessionVariables = {
       EDITOR = "nvim";
     };
-    stateVersion = "23.11"; #WARN: Do NOT! edit!!
+    stateVersion = "24.11"; #WARN: Do NOT! edit!!
   };
   programs.home-manager.enable = true;
 }
