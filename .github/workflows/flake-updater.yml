@@ -1,6 +1,5 @@
 name: update-flake-lock
 on:
-  push:
   workflow_dispatch: # allows manual triggering
   schedule:
     - cron: "0 0 * * 1,4" # Run twice a week
