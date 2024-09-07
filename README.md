@@ -18,7 +18,7 @@ This is my nixos config. It's intended for the use of 2 main devices and one ras
 As this configuration utilizes flakes it is fairly simple to install and setup:
 
 ```bash
-sudo nixos-rebuild switch --flake '/etc/nixos/#<host-name>'
+sudo nixos-rebuild switch --flake './#<host-name>'
 ```
 
 ### Updating the configuration
