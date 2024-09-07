@@ -1,8 +1,10 @@
 name: update-flake-lock
 on:
-  push
-  schedule:
-    - cron: "0 0 * * 1,4" # Run twice a week
+  [
+    push,
+    schedule:
+      - cron: "0 0 * * 1,4"
+  ] # Run twice a week
 
 jobs:
   lockfile:
