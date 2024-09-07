@@ -32,7 +32,7 @@ sudo nix flake update
 ```
 
 ```bash
-sudo nixos-rebuild switch --flake '/etc/nixos/#<host-name>' --upgrade
+sudo nixos-rebuild switch --flake './#<host-name>'
 ```
 
 For more information look at: [NixOS docs](https://nixos.wiki/wiki/flakes)
