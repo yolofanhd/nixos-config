@@ -43,7 +43,7 @@
           modules = [
             ./hosts/arithmancer/configuration.nix
             inputs.home-manager.nixosModules.default
-            lanzaboote.nixosModules.lanzaboote # Secure boot
+            lanzaboote.nixosModules.lanzaboote
           ];
         };
         spinorer = nixpkgs.lib.nixosSystem {
@@ -56,7 +56,7 @@
           modules = [
             ./hosts/spinorer/configuration.nix
             inputs.home-manager.nixosModules.default
-            #lanzaboote.nixosModules.lanzaboote # Secure boot
+            lanzaboote.nixosModules.lanzaboote
           ];
         };
         rpi5 = nixpkgs.lib.nixosSystem {
