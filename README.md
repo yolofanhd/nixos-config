@@ -15,8 +15,20 @@ This is my nixos config. It's intended for the use of 2 main devices and one ras
 
 ## Installation and setup
 
-As this configuration utilizes flakes it is fairly simple to install and setup:
+As this configuration utilizes flakes it is fairly simple to install and setup.
+1. Clone this repo
+```bash
+git clone https://github.com/yolofanhd/nixos-config
+cd nixos-config
+```
 
+2. Copy your hardware-configuration.nix into the root of this repo
+```bash
+cp /etc/nixos/hardware-configuration.nix ./
+git add ./hardware-configuration.nix -f
+```
+
+3. Install the desired host configuration
 ```bash
 sudo nixos-rebuild switch --flake './#<host-name>'
 ```
