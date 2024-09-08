@@ -62,21 +62,13 @@ You can also build a custom iso. There are several use cases for that:
 The build process is fairly easy:
 
 ```bash
-SKIP_HARDWARE_CONFIG=true nix build '.#nixosConfigurations.<host-name>.config.formats.<format>'
+nix build '.#nixosConfigurations.image.<host-name>.config.formats.<format>'
 ```
 
 The hostname can be choosen like stated in the flake.nix.
 All formats from [nixos-generators](https://github.com/nix-community/nixos-generators)
 should work out of the box. Feel free to extend [flake.nix](./flake.nix) to be able to
 support your custom formats.
-
-> [!NOTE]
-> I ran into an issue when compiling the isos. Apperantly the build gets cached
-> between runs. So it would be advisable to set `SKIP_HARDWARE_CONFIG=true` on the first
-> run. Otherwise the build will contain `hardware-configuration.nix` and won't
-> boot as your booting system might have different devices. This is annoying because even
-> if the flag is set later on it still might contain hardware configs.
-
 The iso can be found in `./result/nixos.iso`.
 
 ### Updating the configuration
