@@ -12,9 +12,11 @@ let
 in
 {
   imports =
-    lib.optional includeHardwareConfig (rootPrefix + /hardware-configuration.nix)
-    ++ lib.optional includeHardwareConfig (modulePrefix + /boot.nix)
-    ++ [
+    lib.optionals includeHardwareConfig
+    [
+      (rootPrefix + /hardware-configuration.nix)
+      (modulePrefix + /boot.nix)
+    ] ++ [
       (modulePrefix + /wayland.nix)
       (modulePrefix + /sound.nix)
       (modulePrefix + /nvidia.nix)
