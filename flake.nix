@@ -25,17 +25,35 @@
 
     zen-browser.url = "github:MarceColl/zen-browser-flake";
     rpi5-flake.url = "git+https://gitlab.com/vriska/nix-rpi5.git";
+
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { nixpkgs
+    { self
+    , nixpkgs
     , lanzaboote
+    , nixos-generators
     , ...
-    } @ inputs: {
+    } @ inputs:
+    let
+      includeHardwareConfig = builtins.getEnv "SKIP_HARDWARE_CONFIG" != "true";
+    in
+    {
+      nixosModules.myFormats = { ... }: {
+        imports = [
+          nixos-generators.nixosModules.all-formats
+        ];
+        nixpkgs.hostPlatform = "x86_64-linux";
+      };
       nixosConfigurations = {
         arithmancer = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
+            inherit includeHardwareConfig;
             system = "x86_64-linux";
             hostName = "arithmancer";
             username = "fractalix";
@@ -44,11 +62,13 @@
             ./hosts/arithmancer/configuration.nix
             inputs.home-manager.nixosModules.default
             lanzaboote.nixosModules.lanzaboote
+            self.nixosModules.myFormats
           ];
         };
         spinorer = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
+            inherit includeHardwareConfig;
             system = "x86_64-linux";
             hostName = "spinorer";
             username = "vectorix";
@@ -57,11 +77,13 @@
             ./hosts/spinorer/configuration.nix
             inputs.home-manager.nixosModules.default
             lanzaboote.nixosModules.lanzaboote
+            self.nixosModules.myFormats
           ];
         };
         rpi5 = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
+            inherit includeHardwareConfig;
             system = "aarch64-linux";
             hostName = "rpi5";
             username = "pi";
@@ -69,6 +91,7 @@
           modules = [
             ./hosts/rpi5/configuration.nix
             inputs.home-manager.nixosModules.default
+            self.nixosModules.myFormats
           ];
         };
       };

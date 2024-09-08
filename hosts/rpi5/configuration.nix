@@ -1,8 +1,10 @@
 { pkgs
+, lib
 , inputs
 , username
 , system
 , hostName
+, includeHardwareConfig
 , ...
 }:
 let
@@ -10,11 +12,12 @@ let
   modulePrefix = ./../../modules;
 in
 {
-  imports = [
-    (modulePrefix + /nix-defaults.nix)
-    (rootPrefix + /hardware-configuration.nix)
-    inputs.home-manager.nixosModules.default
-  ];
+  imports =
+    lib.optional includeHardwareConfig (rootPrefix + /hardware-configuration.nix)
+    ++ [
+      (modulePrefix + /nix-defaults.nix)
+      inputs.home-manager.nixosModules.default
+    ];
 
   environment.systemPackages = with pkgs; [
     vim

@@ -1,7 +1,9 @@
 { pkgs
 , inputs
+, lib
 , username
 , system
+, includeHardwareConfig
 , ...
 }:
 let
@@ -9,21 +11,22 @@ let
   modulePrefix = ./../../modules;
 in
 {
-  imports = [
-    (modulePrefix + /wayland.nix)
-    (modulePrefix + /sound.nix)
-    (modulePrefix + /nvidia.nix)
-    (modulePrefix + /yubikey.nix)
-    (modulePrefix + /greetd.nix)
-    (modulePrefix + /dbus.nix)
-    (modulePrefix + /network.nix)
-    (modulePrefix + /bluetooth.nix)
-    (modulePrefix + /systemd.nix)
-    (modulePrefix + /boot.nix)
-    (modulePrefix + /nix-defaults.nix)
-    (rootPrefix + /hardware-configuration.nix)
-    inputs.home-manager.nixosModules.default
-  ];
+  imports =
+    lib.optional includeHardwareConfig (rootPrefix + /hardware-configuration.nix)
+    ++ lib.optional includeHardwareConfig (modulePrefix + /boot.nix)
+    ++ [
+      (modulePrefix + /wayland.nix)
+      (modulePrefix + /sound.nix)
+      (modulePrefix + /nvidia.nix)
+      (modulePrefix + /yubikey.nix)
+      (modulePrefix + /greetd.nix)
+      (modulePrefix + /dbus.nix)
+      (modulePrefix + /network.nix)
+      (modulePrefix + /bluetooth.nix)
+      (modulePrefix + /systemd.nix)
+      (modulePrefix + /nix-defaults.nix)
+      inputs.home-manager.nixosModules.default
+    ];
 
   environment.systemPackages = with pkgs; [
     btop
