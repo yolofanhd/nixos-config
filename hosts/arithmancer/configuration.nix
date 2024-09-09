@@ -28,6 +28,7 @@ in
       (modulePrefix + /bluetooth.nix)
       (modulePrefix + /systemd.nix)
       (modulePrefix + /nix-defaults.nix)
+      (modulePrefix + /wireguard.nix)
       inputs.home-manager.nixosModules.default
     ];
 
