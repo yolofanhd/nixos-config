@@ -1,95 +1,90 @@
 { pkgs
 , inputs
+, includeHardwareConfig
 , username
 , system
+, lib
 , ...
 }:
 let
+  rootPrefix = ./../..;
   modulePrefix = ./../../modules;
 in
 {
-  imports = [
-    (modulePrefix + /wayland.nix)
-    (modulePrefix + /sound.nix)
-    (modulePrefix + /nvidia.nix)
-    (modulePrefix + /yubikey.nix)
-    (modulePrefix + /greetd.nix)
-    (modulePrefix + /dbus.nix)
-    (modulePrefix + /network.nix)
-    (modulePrefix + /bluetooth.nix)
-    (modulePrefix + /systemd.nix)
-    (modulePrefix + /boot.nix)
-    (modulePrefix + /wireguard.nix)
-    ./hardware-configuration.nix
-    inputs.home-manager.nixosModules.default
+  imports =
+    lib.optionals includeHardwareConfig
+    [
+      (rootPrefix + /hardware-configuration.nix)
+      (modulePrefix + /boot.nix)
+    ]
+    ++ [
+      (modulePrefix + /wayland.nix)
+      (modulePrefix + /sound.nix)
+      (modulePrefix + /nvidia.nix)
+      (modulePrefix + /yubikey.nix)
+      (modulePrefix + /greetd.nix)
+      (modulePrefix + /dbus.nix)
+      (modulePrefix + /network.nix)
+      (modulePrefix + /bluetooth.nix)
+      (modulePrefix + /systemd.nix)
+      (modulePrefix + /nix-defaults.nix)
+      (modulePrefix + /wireguard.nix)
+      inputs.home-manager.nixosModules.default
+    ];
+
+  environment.systemPackages = with pkgs; [
+    btop
+    cmake
+    docker
+    gcc
+    git
+    htop
+    pinentry-curses
+    polkit
+    polkit_gnome
+    python3
+    sbctl
+    tree
+    unzip
+    vim
+    wget
+    (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
   ];
-
-  time.timeZone = "Europe/Vienna";
-
-  i18n.defaultLocale = "en_US.UTF-8";
 
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "docker" ];
     shell = pkgs.zsh;
+    initialPassword = "nixos";
     packages = with pkgs; [
-      inputs.zen-browser.packages.${system}.default
-      firefox
-      obs-studio
-      yubioath-flutter
-      waybar
-      signal-desktop
-      gimp
-      blender
-      vscodium
-      docker
+      anki-bin
       bitwarden
-      xplorer
+      blender
+      cheat
       discord
+      docker
+      firefox
+      gimp
+      inputs.zen-browser.packages.${system}.default
+      obs-studio
+      obsidian # note taking app
+      signal-desktop
+      slurp # for screenshotting in wayland cli tool
+      spotify
+      steam
+      swww # background images
+      texlive.combined.scheme-full
       ungoogled-chromium
       vimPlugins.coc-clangd
+      vscodium
+      waybar
+      wayshot # for screenshotting in wayland cli tool
+      wl-clipboard
+      xplorer
+      yubioath-flutter
+      zathura # pdf reader
+      zip
     ];
-  };
-
-  environment.systemPackages = with pkgs; [
-    htop
-    btop
-    sbctl # For secureboot debugging stuff
-    unzip
-    tree
-    zip
-    vim
-    wget
-    cmake
-    polkit
-    polkit_gnome
-    docker
-    gcc
-    pinentry-curses
-    python3
-  ];
-
-  security = {
-    tpm2 = {
-      enable = true;
-      pkcs11.enable = true;
-      tctiEnvironment.enable = true;
-    };
-    polkit.enable = true;
-    pam = {
-      services.gdm.enableGnomeKeyring = true;
-      services = {
-        hyprlock = { };
-      };
-    };
-  };
-
-  programs.zsh.enable = true;
-  services.pcscd.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-curses;
-    enableSSHSupport = true;
   };
 
   home-manager = {
@@ -104,20 +99,16 @@ in
     };
   };
 
-  nix = {
-    settings.experimental-features = [ "nix-command" "flakes" ];
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
+  nixpkgs.config.allowUnfree = true;
+  programs = {
+    gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-curses;
+      enableSSHSupport = true;
     };
+    zsh.enable = true;
   };
-
-  nixpkgs = {
-    config.allowUnfree = true; # allows unfree packages (spotify, etc.)
-    overlays = [
-    ];
-  };
-
-  system.stateVersion = "23.11"; #WARN: DO NOT! EDIT!!
+  time.timeZone = "Europe/Vienna";
+  i18n.defaultLocale = "en_US.UTF-8";
+  system.stateVersion = "24.11"; #WARN: DO NOT! EDIT!!
 }

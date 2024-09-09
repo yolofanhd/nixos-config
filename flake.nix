@@ -1,5 +1,5 @@
 {
-  description = "YoloFanHD's nixos config";
+  description = "YoloFan's nixos config";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -25,21 +25,35 @@
 
     zen-browser.url = "github:MarceColl/zen-browser-flake";
     rpi5-flake.url = "git+https://gitlab.com/vriska/nix-rpi5.git";
+
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { nixpkgs
+    { self
+    , nixpkgs
     , lanzaboote
+    , nixos-generators
     , ...
-    } @ inputs: {
+    } @ inputs:
+    {
+      nixosModules.myFormats = { system, ... }: {
+        imports = [
+          nixos-generators.nixosModules.all-formats
+        ];
+        nixpkgs.hostPlatform = system;
+      };
       nixosConfigurations = {
         arithmancer = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
+            includeHardwareConfig = true;
             system = "x86_64-linux";
             hostName = "arithmancer";
             username = "fractalix";
-            rootDeviceUuid = "65eec619-2d7c-45e3-b905-898f4ee59be8";
           };
           modules = [
             ./hosts/arithmancer/configuration.nix
@@ -50,10 +64,10 @@
         spinorer = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
+            includeHardwareConfig = true;
             system = "x86_64-linux";
             hostName = "spinorer";
             username = "vectorix";
-            rootDeviceUuid = "4a76637d-da9f-4eb9-a278-532252a1d104";
           };
           modules = [
             ./hosts/spinorer/configuration.nix
@@ -64,6 +78,7 @@
         rpi5 = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
+            includeHardwareConfig = true;
             system = "aarch64-linux";
             hostName = "rpi5";
             username = "pi";
@@ -72,6 +87,51 @@
             ./hosts/rpi5/configuration.nix
             inputs.home-manager.nixosModules.default
           ];
+        };
+
+        image = {
+          arithmancer = nixpkgs.lib.nixosSystem {
+            specialArgs = {
+              inherit inputs;
+            includeHardwareConfig = false;
+              system = "x86_64-linux";
+              hostName = "arithmancer";
+              username = "fractalix";
+            };
+            modules = [
+              ./hosts/arithmancer/configuration.nix
+              inputs.home-manager.nixosModules.default
+              self.nixosModules.myFormats
+            ];
+          };
+          spinorer = nixpkgs.lib.nixosSystem {
+            specialArgs = {
+              inherit inputs;
+            includeHardwareConfig = false;
+              system = "x86_64-linux";
+              hostName = "spinorer";
+              username = "vectorix";
+            };
+            modules = [
+              ./hosts/spinorer/configuration.nix
+              inputs.home-manager.nixosModules.default
+              self.nixosModules.myFormats
+            ];
+          };
+          rpi5 = nixpkgs.lib.nixosSystem {
+            specialArgs = {
+              inherit inputs;
+            includeHardwareConfig = false;
+              system = "aarch64-linux";
+              hostName = "rpi5";
+              username = "pi";
+            };
+            modules = [
+              ./hosts/rpi5/configuration.nix
+              inputs.home-manager.nixosModules.default
+              self.nixosModules.myFormats
+            ];
+          };
         };
       };
     };

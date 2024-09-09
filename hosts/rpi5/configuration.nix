@@ -1,14 +1,43 @@
 { pkgs
+, lib
 , inputs
 , username
 , system
 , hostName
+, includeHardwareConfig
 , ...
-}: {
-  imports = [
-    ./hardware-configuration.nix
-    inputs.home-manager.nixosModules.default
+}:
+let
+  rootPrefix = ./../..;
+  modulePrefix = ./../../modules;
+in
+{
+  imports =
+    lib.optionals includeHardwareConfig
+    [
+      (rootPrefix + /hardware-configuration.nix)
+    ] ++ [
+      (modulePrefix + /nix-defaults.nix)
+      inputs.home-manager.nixosModules.default
+    ];
+
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    htop
+    btop
+    wget
+    inputs.myvim.packages."${system}".default
   ];
+
+  users = {
+    users.pi = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ];
+      packages = with pkgs; [
+      ];
+    };
+  };
 
   boot = {
     loader.systemd-boot.enable = true;
@@ -17,29 +46,15 @@
   };
 
   networking = {
-    networkmanager.enable = true;
     inherit hostName;
+    networkmanager.enable = true;
+    firewall.enable = false;
     wireless = {
       enable = false;
-      userControlled = {
-        enable = true;
-        group = "network";
-      };
     };
   };
 
   time.timeZone = "Europe/Vienna";
-
-  users = {
-    groups.networking = { };
-    users.pi = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "networking" ];
-      packages = with pkgs; [
-      ];
-    };
-  };
-
   home-manager = {
     extraSpecialArgs = {
       inherit username;
@@ -51,18 +66,6 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-    htop
-    btop
-    wget
-    inputs.myvim.packages."${system}".default
-  ];
-
   services.openssh.enable = true;
-
-  networking.firewall.enable = false;
-
   system.stateVersion = "24.11"; #WARN: Do NOT! edit!!
 }

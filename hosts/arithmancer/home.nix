@@ -19,10 +19,6 @@ in
     (prefix + /zsh.nix)
     (prefix + /kitty.nix)
   ];
-
-  nixpkgs.config.allowUnfree = true;
-  programs.home-manager.enable = true;
-
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
@@ -30,38 +26,13 @@ in
       kitty
       zsh
       tmux
-
-      git
-
-      firefox # browser
-      spotify
-      obsidian # note taking app
-
-      cheat
-      swww # background images
-
-      wl-clipboard
-      slurp # for screenshotting in wayland cli tool
-      wayshot # for screenshotting in wayland cli tool
-
-      anki-bin # learning cards
-      texlive.combined.scheme-full # latex support
-
-      zathura # pdf reader
-
-      steam
-
       inputs.myvim.packages.${system}.default
-
-      (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
     ];
-
-    file = { };
 
     sessionVariables = {
       EDITOR = "nvim";
     };
 
-    stateVersion = "23.11"; # DO NOT! EDIT!!
+    stateVersion = "24.11"; # WARN: DO NOT! EDIT!!
   };
 }

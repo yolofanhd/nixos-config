@@ -1,15 +1,16 @@
 { pkgs
 , username
+, modulePrefix
 , ...
 }:
 let
-  prefix = ./../../modules/home;
+  prefix = modulePrefix + /home;
 in
 {
   imports = [
     (prefix + /dunst.nix)
     (import (prefix + /hyprland.nix) {
-      monitor = ",highrr,auto,1.6";
+      monitor = ",highrr,auto,2";
     })
     (prefix + /tmux.nix)
     (prefix + /waybar-topbar.nix)
@@ -18,10 +19,7 @@ in
     (prefix + /kitty.nix)
   ];
 
-  nixpkgs.config.allowUnfree = true;
-  programs.home-manager.enable = true;
-
-  # Only contains packages related to home configuration
+  # INFO: Only contains packages related to home configuration
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
@@ -35,12 +33,10 @@ in
       zsh
     ];
 
-    file = { };
-
     sessionVariables = {
       EDITOR = "nvim";
     };
 
-    stateVersion = "23.11"; # do not change (could contain breaking changes)
+    stateVersion = "24.11"; # WARN: do not change (could contain breaking changes)
   };
 }
