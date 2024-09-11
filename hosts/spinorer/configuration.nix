@@ -13,10 +13,11 @@ in
 {
   imports =
     lib.optionals includeHardwareConfig
-    [
-      (rootPrefix + /hardware-configuration.nix)
-      (modulePrefix + /boot.nix)
-    ] ++ [
+      [
+        (rootPrefix + /hardware-configuration.nix)
+        (modulePrefix + /boot.nix)
+      ]
+    ++ [
       (modulePrefix + /wayland.nix)
       (modulePrefix + /sound.nix)
       (modulePrefix + /nvidia.nix)
@@ -27,6 +28,7 @@ in
       (modulePrefix + /bluetooth.nix)
       (modulePrefix + /systemd.nix)
       (modulePrefix + /nix-defaults.nix)
+      (modulePrefix + /gnupg.nix)
       inputs.home-manager.nixosModules.default
     ];
 
@@ -93,12 +95,6 @@ in
     users = {
       ${username} = import ./home.nix;
     };
-  };
-
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-curses;
-    enableSSHSupport = true;
   };
 
   programs.zsh.enable = true;
