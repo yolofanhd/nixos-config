@@ -14,9 +14,10 @@ in
 {
   imports =
     lib.optionals includeHardwareConfig
-    [
-      (rootPrefix + /hardware-configuration.nix)
-    ] ++ [
+      [
+        (rootPrefix + /hardware-configuration.nix)
+      ]
+    ++ [
       (modulePrefix + /nix-defaults.nix)
       inputs.home-manager.nixosModules.default
     ];

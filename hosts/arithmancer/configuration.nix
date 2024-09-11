@@ -13,10 +13,10 @@ in
 {
   imports =
     lib.optionals includeHardwareConfig
-    [
-      (rootPrefix + /hardware-configuration.nix)
-      (modulePrefix + /boot.nix)
-    ]
+      [
+        (rootPrefix + /hardware-configuration.nix)
+        (modulePrefix + /boot.nix)
+      ]
     ++ [
       (modulePrefix + /wayland.nix)
       (modulePrefix + /sound.nix)
@@ -28,6 +28,7 @@ in
       (modulePrefix + /bluetooth.nix)
       (modulePrefix + /systemd.nix)
       (modulePrefix + /nix-defaults.nix)
+      (modulePrefix + /gnupg.nix)
       inputs.home-manager.nixosModules.default
     ];
 
@@ -98,15 +99,8 @@ in
     };
   };
 
-  nixpkgs.config.allowUnfree = true;
-  programs = {
-    gnupg.agent = {
-      enable = true;
-      pinentryPackage = pkgs.pinentry-curses;
-      enableSSHSupport = true;
-    };
-    zsh.enable = true;
-  };
+  programs.zsh.enable = true;
+
   time.timeZone = "Europe/Vienna";
   i18n.defaultLocale = "en_US.UTF-8";
   system.stateVersion = "24.11"; #WARN: DO NOT! EDIT!!
