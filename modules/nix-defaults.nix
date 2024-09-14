@@ -1,7 +1,6 @@
-# Default nix config with some garbage collect for images older than a week
-_: {
+{
   nixpkgs = {
-    config.allowUnfree = true; # allows unfree packages (spotify, etc.)
+    config.allowUnfree = true;
     overlays = [
     ];
   };

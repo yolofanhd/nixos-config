@@ -1,5 +1,4 @@
-# This config holds Yubikey related stuff
-_: {
+{
   security = {
     polkit.enable = true;
     pam = {

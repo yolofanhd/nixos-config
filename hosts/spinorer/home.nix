@@ -19,9 +19,6 @@ in
     (prefix + /kitty.nix)
   ];
 
-  nixpkgs.config.allowUnfree = true;
-  programs.home-manager.enable = true;
-
   # INFO: Only contains packages related to home configuration
   home = {
     inherit username;

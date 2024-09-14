@@ -1,7 +1,9 @@
 { pkgs
 , inputs
+, includeHardwareConfig
 , username
 , system
+, lib
 , ...
 }:
 let
@@ -9,21 +11,26 @@ let
   modulePrefix = ./../../modules;
 in
 {
-  imports = [
-    (modulePrefix + /wayland.nix)
-    (modulePrefix + /sound.nix)
-    (modulePrefix + /nvidia.nix)
-    (modulePrefix + /yubikey.nix)
-    (modulePrefix + /greetd.nix)
-    (modulePrefix + /dbus.nix)
-    (modulePrefix + /network.nix)
-    (modulePrefix + /bluetooth.nix)
-    (modulePrefix + /systemd.nix)
-    (modulePrefix + /boot.nix)
-    (modulePrefix + /nix-defaults.nix)
-    (rootPrefix + /hardware-configuration.nix)
-    inputs.home-manager.nixosModules.default
-  ];
+  imports =
+    lib.optionals includeHardwareConfig
+      [
+        (rootPrefix + /hardware-configuration.nix)
+        (modulePrefix + /boot.nix)
+      ]
+    ++ [
+      (modulePrefix + /wayland.nix)
+      (modulePrefix + /sound.nix)
+      (modulePrefix + /nvidia.nix)
+      (modulePrefix + /yubikey.nix)
+      (modulePrefix + /greetd.nix)
+      (modulePrefix + /dbus.nix)
+      (modulePrefix + /network.nix)
+      (modulePrefix + /bluetooth.nix)
+      (modulePrefix + /systemd.nix)
+      (modulePrefix + /nix-defaults.nix)
+      (modulePrefix + /gnupg.nix)
+      inputs.home-manager.nixosModules.default
+    ];
 
   environment.systemPackages = with pkgs; [
     btop
@@ -48,6 +55,7 @@ in
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" ];
     shell = pkgs.zsh;
+    initialPassword = "nixos";
     packages = with pkgs; [
       anki-bin
       bitwarden
@@ -79,12 +87,6 @@ in
     ];
   };
 
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-curses;
-    enableSSHSupport = true;
-  };
-
   home-manager = {
     extraSpecialArgs = {
       inherit inputs;
@@ -96,6 +98,8 @@ in
       ${username} = import ./home.nix;
     };
   };
+
+  programs.zsh.enable = true;
 
   time.timeZone = "Europe/Vienna";
   i18n.defaultLocale = "en_US.UTF-8";
