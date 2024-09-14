@@ -10,5 +10,5 @@ jobs:
       - uses: cachix/install-nix-action@v27
         with:
           nix_path: nixpkgs=channel:nixos-unstable
-      - run: nix build '.#nixosConfigurations.image.arithmancer.config.formats.iso'
+      - run: nix build .#nixosConfigurations.image.arithmancer.config.formats.iso
       - run: nix build '.#nixosConfigurations.image.spinorer.config.formats.iso'
