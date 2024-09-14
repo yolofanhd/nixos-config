@@ -1,4 +1,3 @@
-# Fingerprint service related config
 # NOTE: Currently not in use due to unsupported hardware
 { pkgs, ... }: {
   services.fprintd = {
