@@ -8,7 +8,7 @@
 }:
 let
   rootPrefix = ./../..;
-  modulePrefix = ./../../modules;
+  modulePrefix = rootPrefix + /modules;
 in
 {
   imports =
@@ -18,6 +18,7 @@ in
         (modulePrefix + /boot.nix)
       ]
     ++ [
+      (modulePrefix + /agenix.nix)
       (modulePrefix + /wayland.nix)
       (modulePrefix + /sound.nix)
       (modulePrefix + /nvidia.nix)
@@ -48,6 +49,7 @@ in
     unzip
     vim
     wget
+    inputs.agenix.packages.${system}.default
     (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
   ];
 
@@ -98,6 +100,8 @@ in
       ${username} = import ./home.nix;
     };
   };
+
+  services.openssh.enable = true;
 
   programs.zsh.enable = true;
 
