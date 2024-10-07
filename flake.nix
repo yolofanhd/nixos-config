@@ -30,6 +30,12 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.darwin.follows = "";
+    };
   };
 
   outputs =
@@ -37,9 +43,9 @@
     , nixpkgs
     , lanzaboote
     , nixos-generators
+    , agenix
     , ...
-    } @ inputs:
-    {
+    } @ inputs: {
       nixosModules.myFormats = { system, ... }: {
         imports = [
           nixos-generators.nixosModules.all-formats
@@ -58,6 +64,7 @@
           modules = [
             ./hosts/arithmancer/configuration.nix
             inputs.home-manager.nixosModules.default
+            agenix.nixosModules.default
             lanzaboote.nixosModules.lanzaboote
           ];
         };
@@ -72,6 +79,7 @@
           modules = [
             ./hosts/spinorer/configuration.nix
             inputs.home-manager.nixosModules.default
+            agenix.nixosModules.default
             lanzaboote.nixosModules.lanzaboote
           ];
         };
@@ -85,6 +93,7 @@
           };
           modules = [
             ./hosts/rpi5/configuration.nix
+            agenix.nixosModules.default
             inputs.home-manager.nixosModules.default
           ];
         };
@@ -93,7 +102,7 @@
           arithmancer = nixpkgs.lib.nixosSystem {
             specialArgs = {
               inherit inputs;
-            includeHardwareConfig = false;
+              includeHardwareConfig = false;
               system = "x86_64-linux";
               hostName = "arithmancer";
               username = "fractalix";
@@ -107,7 +116,7 @@
           spinorer = nixpkgs.lib.nixosSystem {
             specialArgs = {
               inherit inputs;
-            includeHardwareConfig = false;
+              includeHardwareConfig = false;
               system = "x86_64-linux";
               hostName = "spinorer";
               username = "vectorix";
@@ -121,7 +130,7 @@
           rpi5 = nixpkgs.lib.nixosSystem {
             specialArgs = {
               inherit inputs;
-            includeHardwareConfig = false;
+              includeHardwareConfig = false;
               system = "aarch64-linux";
               hostName = "rpi5";
               username = "pi";
