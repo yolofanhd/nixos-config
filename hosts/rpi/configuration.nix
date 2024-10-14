@@ -6,6 +6,7 @@
 , hostName
 , includeHardwareConfig
 , isPi5
+, isNotMain
 , ...
 }:
 let
@@ -23,9 +24,7 @@ in
         ./pi5.nix
         (modulePrefix + /k3s/main-node.nix)
       ]
-    ++ lib.optionals
-      (isPi5
-      == "false")
+    ++ lib.optionals isNotMain
       [
         (modulePrefix + /k3s/node.nix)
       ]
