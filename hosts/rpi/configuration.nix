@@ -56,7 +56,17 @@ in
   networking = {
     inherit hostName;
     networkmanager.enable = true;
-    firewall.enable = false;
+    firewall = {
+      enable = false;
+      allowedTCPPorts = [
+        6443
+        # 2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
+        # 2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
+      ];
+      allowedUDPPorts = [
+        8472
+      ];
+    };
     wireless = {
       enable = false;
     };
