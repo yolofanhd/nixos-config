@@ -72,6 +72,22 @@ in
     };
   };
 
+  boot.kernelModules = [
+    "br_netfilter"
+    "ip_conntrack"
+    "ip_vs"
+    "ip_vs_rr"
+    "ip_vs_wrr"
+    "ip_vs_sh"
+    "overlay"
+  ];
+
+  boot.kernel.sysctl = {
+    "net.bridge-nf-call-ip6tables" = 1;
+    "net.bridge-nf-call-iptables" = 1;
+    "net.ipv4.ip_forward" = 1;
+  };
+
   time.timeZone = "Europe/Vienna";
   home-manager = {
     extraSpecialArgs = {
