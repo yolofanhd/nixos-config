@@ -22,6 +22,6 @@ in
     sessionVariables = {
       EDITOR = "nvim";
     };
-    stateVersion = "24.05"; #WARN: Do NOT! edit!!
+    stateVersion = "24.11"; #WARN: Do NOT! edit!!
   };
 }

@@ -2,17 +2,17 @@
   description = "YoloFan's nixos config";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/24.05";
-    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    rpi5-flake.url = "git+https://gitlab.com/vriska/nix-rpi5.git";
 
+    home-manager.url = "github:nix-community/home-manager";
     myvim.url = "github:yolofanhd/nixvim-config";
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
 
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
+    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
@@ -23,9 +23,6 @@
       url = "github:nix-community/lanzaboote/v0.3.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    zen-browser.url = "github:MarceColl/zen-browser-flake";
-    rpi5-flake.url = "git+https://gitlab.com/vriska/nix-rpi5.git";
 
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
@@ -42,6 +39,7 @@
   outputs =
     { self
     , nixpkgs
+    , nixpkgs-stable
     , lanzaboote
     , nixos-generators
     , agenix
@@ -84,31 +82,35 @@
             lanzaboote.nixosModules.lanzaboote
           ];
         };
-        rpi5 = nixpkgs.lib.nixosSystem {
+
+        rpi5 = nixpkgs-stable.lib.nixosSystem {
+          system = "aarch64-linux";
           specialArgs = {
             inherit inputs;
             includeHardwareConfig = true;
+            isPi5 = true;
             system = "aarch64-linux";
             hostName = "rpi5";
             username = "pi";
           };
           modules = [
-            ./hosts/rpi5/configuration.nix
+            ./hosts/rpi/configuration.nix
             agenix.nixosModules.default
             inputs.home-manager.nixosModules.default
           ];
         };
-	rpi4 = nixpkgs.lib.nixosSystem {
+        rpi4 = nixpkgs-stable.lib.nixosSystem {
           system = "aarch64-linux";
           specialArgs = {
             inherit inputs;
-            system = "aarch64-linux";
             includeHardwareConfig = true;
+            isPi5 = false;
+            system = "aarch64-linux";
             hostName = "rpi4";
             username = "pi";
           };
           modules = [
-            ./hosts/rpi4/configuration.nix
+            ./hosts/rpi/configuration.nix
             agenix.nixosModules.default
             inputs.nixos-hardware.nixosModules.raspberry-pi-4
             inputs.home-manager.nixosModules.default
