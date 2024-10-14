@@ -2,8 +2,9 @@
   description = "YoloFan's nixos config";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/24.05";
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     myvim.url = "github:yolofanhd/nixvim-config";
 
@@ -94,6 +95,22 @@
           modules = [
             ./hosts/rpi5/configuration.nix
             agenix.nixosModules.default
+            inputs.home-manager.nixosModules.default
+          ];
+        };
+	rpi4 = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs;
+            system = "aarch64-linux";
+            includeHardwareConfig = true;
+            hostName = "rpi4";
+            username = "pi";
+          };
+          modules = [
+            ./hosts/rpi4/configuration.nix
+            agenix.nixosModules.default
+            inputs.nixos-hardware.nixosModules.raspberry-pi-4
             inputs.home-manager.nixosModules.default
           ];
         };
