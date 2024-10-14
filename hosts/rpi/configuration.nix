@@ -21,6 +21,12 @@ in
     ++ lib.optionals isPi5
       [
         ./pi5.nix
+        (modulePrefix + /k3s/main-node.nix)
+      ]
+    ++ lib.optionals isPi5
+    == false
+      [
+        (modulePrefix + /k3s/node.nix)
       ]
     ++ [
       (modulePrefix + /nix-defaults.nix)
