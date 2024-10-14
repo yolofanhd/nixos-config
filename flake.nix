@@ -89,6 +89,7 @@
             inherit inputs;
             includeHardwareConfig = true;
             isPi5 = true;
+            isNotMain = false;
             system = "aarch64-linux";
             hostName = "rpi5";
             username = "pi";
