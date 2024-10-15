@@ -19,7 +19,6 @@ in
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
-    file = { };
     sessionVariables = {
       EDITOR = "nvim";
     };

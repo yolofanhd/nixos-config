@@ -33,6 +33,6 @@ in
       EDITOR = "nvim";
     };
 
-    stateVersion = "24.11"; # WARN: DO NOT! EDIT!!
+    stateVersion = "24.05"; # WARN: DO NOT! EDIT!!
   };
 }
