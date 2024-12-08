@@ -8,11 +8,9 @@ in
 {
   imports = [
     (prefix + /tmux.nix)
-    (prefix + /zsh.nix)
   ];
 
   home.packages = with pkgs; [
-    zsh
     tmux
   ];
 
@@ -20,7 +18,7 @@ in
     inherit username;
     homeDirectory = "/home/${username}";
     sessionVariables = {
-      EDITOR = "nvim";
+      EDITOR = "vim";
     };
     stateVersion = "24.11"; #WARN: Do NOT! edit!!
   };

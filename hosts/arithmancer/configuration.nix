@@ -38,6 +38,7 @@ in
   ];
 
   environment.systemPackages = with pkgs; [
+    prusa-slicer
     btop
     cmake
     docker
@@ -56,6 +57,9 @@ in
     inputs.agenix.packages.${system}.default
   ];
 
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
   users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" ];
@@ -63,7 +67,7 @@ in
     initialPassword = "nixos";
     packages = with pkgs; [
       anki-bin
-      bitwarden
+      #bitwarden
       blender
       cheat
       discord
