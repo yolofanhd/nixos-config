@@ -30,6 +30,7 @@ in
       ]
     ++ [
       (modulePrefix + /nix-defaults.nix)
+      (modulePrefix + /agenix.nix)
       inputs.home-manager.nixosModules.default
     ];
   environment.systemPackages = with pkgs; [
