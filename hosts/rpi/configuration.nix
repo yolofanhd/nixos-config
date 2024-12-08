@@ -41,6 +41,7 @@ in
     wget
     libraspberrypi
     raspberrypi-eeprom
+    inputs.agenix.packages.${system}.default
   ];
 
   users = {
