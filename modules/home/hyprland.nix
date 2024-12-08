@@ -1,4 +1,7 @@
-{ monitor, ... }: {
+{ monitor
+, username
+, ...
+}: {
   services.hypridle = {
     enable = true;
     settings = {
@@ -33,9 +36,8 @@
 
       background = [
         {
-          path = "screenshot";
-          blur_passes = 3;
-          blur_size = 8;
+          monitor = "";
+          path = "";
         }
       ];
 
@@ -122,12 +124,14 @@
         "WLR_NO_HARDWARE_CURSORS,1"
       ];
       exec-once = [
+        "swww-daemon"
         "waybar"
         "[ workspace 1 silent ] kitty"
-        "[ workspace 2 silent ] zen"
+        "[ workspace 1 silent ] zen"
         "[ workspace 3 silent ] spotify"
         "[ workspace 3 silent ] discord"
         "[ workspace 3 silent ] signal-desktop"
+        "swww img /home/${username}/Pictures/wallpaper.png"
       ];
       general = {
         gaps_in = 4;
@@ -139,7 +143,6 @@
       };
       decoration = {
         rounding = 10;
-        drop_shadow = false;
         dim_inactive = false;
         dim_strength = 0.1;
         dim_special = 0.3;
@@ -248,10 +251,9 @@
         ", XF86AudioPlay, exec, playerctl play-pause"
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
-        ", XF86AudioLowerVolume, exec, pulseaudio-ctl down"
-        ", XF86AudioRaiseVolume, exec, pulseaudio-ctl up"
-        ", XF86AudioMute, exec, pulseaudio-ctl mute"
-        ", XF86Calculator, exec, wxmaxima"
+        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5.0%-"
+        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5.0%+"
+        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle "
 
         # Screenshots, need slurp, wayshot, wl-copy
         ", Print, exec, wayshot -s \"$(slurp)\" --stdout | wl-copy"

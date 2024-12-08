@@ -12,6 +12,7 @@ in
     (prefix + /dunst.nix)
     (import (prefix + /hyprland.nix) {
       monitor = ",highrr,auto,1.25";
+      inherit username;
     })
     (prefix + /tmux.nix)
     (prefix + /waybar-sidebar.nix)
