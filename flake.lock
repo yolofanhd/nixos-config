@@ -58,17 +58,29 @@
     },
     "crane": {
       "inputs": {
+        "flake-compat": [
+          "lanzaboote",
+          "flake-compat"
+        ],
+        "flake-utils": [
+          "lanzaboote",
+          "flake-utils"
+        ],
         "nixpkgs": [
           "lanzaboote",
           "nixpkgs"
+        ],
+        "rust-overlay": [
+          "lanzaboote",
+          "rust-overlay"
         ]
       },
       "locked": {
-        "lastModified": 1707363508,
-        "narHash": "sha256-Cu5Mwktod5hcxxSpHl0FCeZ9la7v4KO5Tfrrs59AAJg=",
+        "lastModified": 1681177078,
+        "narHash": "sha256-ZNIjBDou2GOabcpctiQykEQVkI8BDwk7TyvlWlI4myE=",
         "owner": "ipetkov",
         "repo": "crane",
-        "rev": "f2926e34a1599837f3256c701739529d772e36e7",
+        "rev": "0c9f468ff00576577d83f5019a66c557ede5acf6",
         "type": "github"
       },
       "original": {
@@ -805,11 +817,11 @@
         "nixvim": "nixvim"
       },
       "locked": {
-        "lastModified": 1733609980,
-        "narHash": "sha256-Y9t+HjEG1I71AQkClVa6wSZ5T5I2rCaJESt0/OP2Hmg=",
+        "lastModified": 1733620058,
+        "narHash": "sha256-oftWIseeQnirCyxUtzMS2QSKbzmp+wTwK/rOTckW2Y4=",
         "owner": "yolofanhd",
         "repo": "nixvim-config",
-        "rev": "c81e21a9bff2845f134da7f0bc567fd16d6d5b6f",
+        "rev": "ba8721ad9eadcb3e3ac1365a26a121190d84fa96",
         "type": "github"
       },
       "original": {
