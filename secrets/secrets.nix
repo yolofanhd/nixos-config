@@ -10,7 +10,11 @@ let
   pi4 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPSbadmd06YNsvjtypxqQCZSyVcEjysyXpCDyi6NZWhC";
   pi5 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPSbadmd06YNsvjtypxqQCZSyVcEjysyXpCDyi6NZWhC";
 
-  kubernetes = [ pi4 pi5 ];
+  pi4system = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO+CU5raZ+vwE6Nv2f8Y10/wG92gviik7LS2L6R9h8n/";
+  pi5system = "";
+
+  k3s_users = [ pi4 pi5 ];
+  k3s_systems = [ pi4system pi5system ];
 in
 {
   "test.age".publicKeys = users ++ systems;
@@ -24,5 +28,5 @@ in
   "rpi5ssh.age".publicKeys = users ++ systems;
   "rpi4ssh.age".publicKeys = users ++ systems;
 
-  "kubernetes.age".publicKeys = kubernetes;
+  "kubernetes.age".publicKeys = k3s_users ++ k3s_systems;
 }
