@@ -28,5 +28,5 @@ in
   "rpi5ssh.age".publicKeys = users ++ systems;
   "rpi4ssh.age".publicKeys = users ++ systems;
 
-  "kubernetes.age".publicKeys = k3s_users ++ k3s_systems;
+  "kubernetes.age".publicKeys = k3s_users ++ k3s_systems ++ users ++ systems;
 }
