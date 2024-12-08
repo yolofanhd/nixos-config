@@ -56,6 +56,8 @@ in
     ];
 
     loader = {
+      systemd-boot.enable = true;
+      generic-extlinux-compatible.enable = false;
       efi.canTouchEfiVariables = false;
     };
   };
