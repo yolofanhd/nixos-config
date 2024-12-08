@@ -33,6 +33,10 @@ in
       inputs.home-manager.nixosModules.default
     ];
 
+  fonts.packages = with pkgs; [
+    nerd-fonts.fantasque-sans-mono
+  ];
+
   environment.systemPackages = with pkgs; [
     btop
     cmake
@@ -50,7 +54,6 @@ in
     vim
     wget
     inputs.agenix.packages.${system}.default
-    (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
   ];
 
   users.users.${username} = {

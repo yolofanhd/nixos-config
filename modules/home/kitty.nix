@@ -3,10 +3,10 @@
     enable = true;
     font = {
       name = "FantasqueSansM Nerd Font";
-      size = 12;
+      size = 14;
     };
     shellIntegration.enableZshIntegration = true;
     shellIntegration.mode = "no-title no-complete";
-    theme = "Gruvbox Dark Hard";
+    themeFile = "GruvboxMaterialDarkHard";
   };
 }
