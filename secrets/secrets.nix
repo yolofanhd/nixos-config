@@ -7,8 +7,8 @@ let
 
   arithmancer = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOS9kdQWuA+RbbF3LKhxYvcqjud8lU+AJg73lnZQMXR3";
   spinorer = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJRtKm8rjoGQkEl6KLNG7uq6KnoQrcrJEWAjnKRR5Qtp";
-  pi4system = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO+CU5raZ+vwE6Nv2f8Y10/wG92gviik7LS2L6R9h8n/";
-  pi5system = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK1rlhG3imQL6jfzzEPZyX5T8eWku66b14gk6C96QFYW";
+  pi4system = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMrpZYJfmCCOZGH/S7zJBV7H3l8xHPEC0pxWLyZeKUX2";
+  pi5system = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIi8vfVuB3fQISZ0oxanEJW6C3RnrP7yz9N1KQm+UpEE";
   systems = [ arithmancer spinorer pi4system pi5system ];
 in
 {
