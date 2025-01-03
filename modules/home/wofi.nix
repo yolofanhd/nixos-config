@@ -3,7 +3,7 @@
     enable = true;
     settings = {
       width = 300;
-      height = 1410;
+      height = 1130;
       location = "left";
       show = "drun";
       prompt = "Search...";

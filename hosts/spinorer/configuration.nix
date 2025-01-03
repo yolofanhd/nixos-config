@@ -40,6 +40,7 @@ in
     gcc
     git
     htop
+    nerd-fonts.fantasque-sans-mono
     pinentry-curses
     polkit
     polkit_gnome
@@ -50,7 +51,6 @@ in
     vimPlugins.coc-clangd
     wget
     inputs.agenix.packages.${system}.default
-    (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
   ];
 
   users.users.${username} = {

@@ -33,7 +33,12 @@ in
       inputs.home-manager.nixosModules.default
     ];
 
+  fonts.packages = with pkgs; [
+    nerd-fonts.fantasque-sans-mono
+  ];
+
   environment.systemPackages = with pkgs; [
+    prusa-slicer
     btop
     cmake
     docker
@@ -50,8 +55,10 @@ in
     vim
     wget
     inputs.agenix.packages.${system}.default
-    (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
   ];
+
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
   users.users.${username} = {
     isNormalUser = true;
@@ -60,7 +67,7 @@ in
     initialPassword = "nixos";
     packages = with pkgs; [
       anki-bin
-      bitwarden
+      #bitwarden
       blender
       cheat
       discord
