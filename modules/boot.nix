@@ -30,6 +30,8 @@
       preLVM = true;
       allowDiscards = true;
     };
+
+    supportedFilesystems = [ "ntfs" ];
   };
 
   fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];

@@ -10,7 +10,7 @@
 
     home-manager.url = "github:nix-community/home-manager";
     myvim.url = "github:yolofanhd/nixvim-config";
-    zen-browser.url = "github:MarceColl/zen-browser-flake";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
     hyprland.url = "github:hyprwm/Hyprland";
