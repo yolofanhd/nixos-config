@@ -29,5 +29,12 @@ in
       owner = username;
       group = "users";
     };
+
+    kubernetes = {
+      file = secret_prefix + /kubernetes.age;
+      path = "/home/${username}/.ssh/kubernetes.secret";
+      owner = username;
+      group = "users";
+    };
   };
 }
