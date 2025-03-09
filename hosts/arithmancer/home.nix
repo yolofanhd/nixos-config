@@ -11,7 +11,7 @@ in
   imports = [
     (prefix + /dunst.nix)
     (import (prefix + /hyprland.nix) {
-      monitor = ",highrr,auto,1.25";
+      monitor = ",highres,auto,1.25";
       inherit username;
     })
     (prefix + /tmux.nix)
