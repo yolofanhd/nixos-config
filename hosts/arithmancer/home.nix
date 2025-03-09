@@ -11,7 +11,8 @@ in
   imports = [
     (prefix + /dunst.nix)
     (import (prefix + /hyprland.nix) {
-      monitor = ",highrr,auto,1.25";
+      monitor = ",highres,auto,1.25";
+      inherit username;
     })
     (prefix + /tmux.nix)
     (prefix + /waybar-sidebar.nix)
@@ -33,6 +34,6 @@ in
       EDITOR = "nvim";
     };
 
-    stateVersion = "24.11"; # WARN: DO NOT! EDIT!!
+    stateVersion = "24.05"; # WARN: DO NOT! EDIT!!
   };
 }

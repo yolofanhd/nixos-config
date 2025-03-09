@@ -1,8 +1,6 @@
 {
   nixpkgs = {
     config.allowUnfree = true;
-    overlays = [
-    ];
   };
   nix = {
     settings.experimental-features = [ "nix-command" "flakes" ];
