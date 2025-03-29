@@ -132,6 +132,8 @@
         "[ workspace 3 silent ] discord"
         "[ workspace 3 silent ] signal-desktop"
         "swww img /home/${username}/Pictures/wallpaper.png"
+        "hyprctl output create headless"
+        "wayvnc 0.0.0.0"
       ];
       general = {
         gaps_in = 4;
