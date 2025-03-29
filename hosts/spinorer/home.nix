@@ -1,6 +1,8 @@
 { pkgs
+, inputs
 , username
 , modulePrefix
+, system
 , ...
 }:
 let
@@ -11,6 +13,7 @@ in
     (prefix + /dunst.nix)
     (import (prefix + /hyprland.nix) {
       monitor = ",highrr,auto,2";
+      inherit username;
     })
     (prefix + /tmux.nix)
     (prefix + /waybar-topbar.nix)
@@ -28,9 +31,7 @@ in
       swww
       slurp
       tmux
-      wayshot
-      wl-clipboard
-      zsh
+      inputs.myvim.packages.${system}.default
     ];
 
     sessionVariables = {

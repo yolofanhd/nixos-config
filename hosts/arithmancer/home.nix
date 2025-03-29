@@ -1,11 +1,12 @@
 { pkgs
 , inputs
 , username
+, modulePrefix
 , system
 , ...
 }:
 let
-  prefix = ./../../modules/home;
+  prefix = modulePrefix + /home;
 in
 {
   imports = [

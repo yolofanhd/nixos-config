@@ -15,8 +15,8 @@ window#waybar {
 .modules-center {
   border-radius: 10px;
   background: #1b1b1b;
-  padding: 12px 0;
-  margin: 8px;
+  padding: 2px 12px;
+  margin: 4px;
 }
 
 tooltip {
@@ -30,12 +30,9 @@ tooltip * {
   text-shadow: none;
 }
 
-.modules-center {
-}
-
 #custom-sep {
   color: #494d64;
-  margin: 4px 0;
+  margin: 0 4px;
 }
 
 #workspaces,
@@ -47,7 +44,7 @@ tooltip * {
 #custom-powermenu,
 #pulseaudio,
 #tray {
-  padding: 6px 0;
+  padding: 0 6px;
 }
 
 #tray menu {
@@ -65,7 +62,7 @@ tooltip * {
   color: #5b6078;
   background: none;
   border: none;
-  padding: 0;
+  padding: 0 6px;
 }
 
 #workspaces button:hover {
@@ -78,7 +75,7 @@ tooltip * {
 
 #temperature {
   color: #eed49f;
-  padding: 6px 0;
+  padding: 0 6px;
 }
 
 #clock {
@@ -92,7 +89,7 @@ tooltip * {
 
 #pulseaudio {
   color: #a6da95;
-  padding: 6px 0;
+  padding: 0 6px;
 }
 
 #pulseaudio.muted {

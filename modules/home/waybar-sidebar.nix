@@ -1,7 +1,7 @@
-{ pkgs, ... }: {
+{
   programs.waybar = {
     enable = true;
-    style = ./waybar.css;
+    style = ./waybar-sidebar.css;
     settings = {
       sideBar = {
         layer = "top";
