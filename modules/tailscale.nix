@@ -26,7 +26,7 @@
       fi
 
       # otherwise authenticate with tailscale
-      ${tailscale}/bin/tailscale up -authkey tskey-auth-kkqYtBWMTf11CNTRL-cHZn3no6v32w1Dkx939h321S6gkQ46DG
+      ${tailscale}/bin/tailscale up -authkey $(cat "${config.age.secrets.tailscale.path}")
     '';
   };
 }
