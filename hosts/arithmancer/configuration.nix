@@ -38,50 +38,12 @@ in
     nerd-fonts.fantasque-sans-mono
   ];
 
-<<<<<<< HEAD
   environment = {
     shells = [ pkgs.zsh ];
     systemPackages = with pkgs; [
       prusa-slicer
       btop
       cmake
-=======
-  environment.systemPackages = with pkgs; [
-    prusa-slicer
-    btop
-    cmake
-    docker
-    gcc
-    git
-    htop
-    pinentry-curses
-    polkit
-    polkit_gnome
-    python3
-    sbctl
-    tailscale
-    tree
-    unzip
-    vim
-    wget
-    inputs.agenix.packages.${system}.default
-  ];
-
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-
-  users.users.${username} = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ];
-    shell = pkgs.zsh;
-    initialPassword = "nixos";
-    packages = with pkgs; [
-      anki-bin
-      #bitwarden
-      blender
-      cheat
-      discord
->>>>>>> 78187f4 (fix(a1): added tailscale)
       docker
       gcc
       git
@@ -91,6 +53,7 @@ in
       polkit_gnome
       python3
       sbctl
+      tailscale
       tree
       unzip
       vim
