@@ -6,7 +6,7 @@ on:
 
 jobs:
   lockfile:
-    runs-on: self-hosted
+    runs-on: yolofanhd-github
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
