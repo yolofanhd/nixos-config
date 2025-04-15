@@ -1,0 +1,20 @@
+name: flake-check
+on:
+  workflow_dispatch: # allows manual triggering
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  check:
+    runs-on: yolofanhd-github
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check flake
+        run: nix flake check
