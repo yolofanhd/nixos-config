@@ -2,10 +2,10 @@ name: flake-check
 on:
   workflow_dispatch:
   pull_request:
-    branches: [ main ]
+    branches: [main]
   push:
     branches:
-      - 'main'
+      - "main"
 
 jobs:
   check:
@@ -15,18 +15,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Create dummy hardware-configuration.nix
         run: |
-          cat <<'EOF' > hardware-configuration.nix
-          { config, lib, pkgs, modulesPath, ... }: {
-            imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
-
-            fileSystems."/" = {
-              device = "/dev/disk/by-label/nixos";
-              fsType = "ext4";
-            };
-
-            boot.loader.grub.enable = false;
-            boot.loader.systemd-boot.enable = false;
-          }
-          EOF
+          cp hardware-configuration-dummy.nix hardware-configuration.nix
+          git add hardware-configuration.nix -f
       - name: Check flake
         run: nix flake check
