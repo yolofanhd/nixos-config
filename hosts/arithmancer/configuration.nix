@@ -87,7 +87,7 @@ in
         steam
         swww # background images
         texlive.combined.scheme-full
-        ungoogled-chromium
+        google-chrome
         vscodium
         waybar
         wayvnc
