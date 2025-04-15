@@ -10,8 +10,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v23
+      - name: Update flake
+        run: nix flake update
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7.0.8
         with:
-          pr-labels: |
-            merge-queue
+          commit-message: "ci(flake.lock): automatic update"
+          branch: ci/flake-lock-update
+          title: "ci(flake.lock): automatic update"
+          body: updated flake.lock
+          assignees: yolofanhd
+          reviewers: yolofanhd
