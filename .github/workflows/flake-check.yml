@@ -16,5 +16,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Create dummy hardware-configuration.nix
+        run: |
+          cat > hardware-configuration.nix <<EOF
+          { config, lib, pkgs, modulesPath, ... }: {
+            imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+            fileSystems."/" = {
+              device = "/dev/disk/by-label/nixos";
+              fsType = "ext4";
+            };
+          }
+          EOF
       - name: Check flake
         run: nix flake check
