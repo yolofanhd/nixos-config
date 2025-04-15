@@ -36,5 +36,12 @@ in
       owner = username;
       group = "users";
     };
+
+    tailscale = {
+      file = secret_prefix + /tailscale.age;
+      path = "/home/${username}/.ssh/tailscale.secret";
+      owner = username;
+      group = "users";
+    };
   };
 }

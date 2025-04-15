@@ -30,6 +30,7 @@ in
       (modulePrefix + /systemd.nix)
       (modulePrefix + /nix-defaults.nix)
       (modulePrefix + /gnupg.nix)
+      (modulePrefix + /tailscale.nix)
       inputs.home-manager.nixosModules.default
     ];
 
@@ -52,6 +53,7 @@ in
       polkit_gnome
       python3
       sbctl
+      tailscale
       tree
       unzip
       vim

@@ -24,4 +24,5 @@ in
   "rpi4ssh.age".publicKeys = users ++ systems;
 
   "kubernetes.age".publicKeys = users ++ systems;
+  "tailscale.age".publicKeys = users ++ systems;
 }
