@@ -1,7 +1,7 @@
 # Justfile to make rebuilding nixos systems easier
 
 # Rebuild system based on host set in .env
-# Links /etc/nixos/hardware-configuraiton.nix
+# Links /etc/nixos/hardware-configuration.nix
 rebuild:
     ln /etc/nixos/hardware-configuration.nix ./ -f
     git add ./hardware-configuration.nix -f
