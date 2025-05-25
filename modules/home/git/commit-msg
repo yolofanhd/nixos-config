@@ -1,4 +1,4 @@
-# INFO: This commit-msg hooks only allows convectional commits
+# INFO: This commit-msg hooks only allows conventional commits
 
 types=("feat" "fix" "docs" "chore" "ci" "refactor" "test")
 min_length=5
