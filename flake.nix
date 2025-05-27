@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     rpi5-flake.url = "git+https://gitlab.com/vriska/nix-rpi5.git";
@@ -117,51 +117,6 @@
             inputs.nixos-hardware.nixosModules.raspberry-pi-4
             inputs.home-manager.nixosModules.default
           ];
-        };
-
-        image = {
-          arithmancer = nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              includeHardwareConfig = false;
-              system = "x86_64-linux";
-              hostName = "arithmancer";
-              username = "fractalix";
-            };
-            modules = [
-              ./hosts/arithmancer/configuration.nix
-              inputs.home-manager.nixosModules.default
-              self.nixosModules.myFormats
-            ];
-          };
-          spinorer = nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              includeHardwareConfig = false;
-              system = "x86_64-linux";
-              hostName = "spinorer";
-              username = "vectorix";
-            };
-            modules = [
-              ./hosts/spinorer/configuration.nix
-              inputs.home-manager.nixosModules.default
-              self.nixosModules.myFormats
-            ];
-          };
-          rpi5 = nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              includeHardwareConfig = false;
-              system = "aarch64-linux";
-              hostName = "rpi5";
-              username = "pi";
-            };
-            modules = [
-              ./hosts/rpi5/configuration.nix
-              inputs.home-manager.nixosModules.default
-              self.nixosModules.myFormats
-            ];
-          };
         };
       };
     };

@@ -4,6 +4,7 @@
 , username
 , system
 , includeHardwareConfig
+, config
 , ...
 }:
 let
@@ -78,13 +79,14 @@ in
         firefox
         gimp
         inputs.myvim.packages.${system}.default
+        just
         obs-studio
         obsidian
         signal-desktop
         spotify
         steam
         swww # background images
-        ungoogled-chromium
+        google-chrome
         unzip
         vscodium
         waybar
@@ -107,6 +109,7 @@ in
       inherit inputs;
       inherit username;
       inherit system;
+      inherit (config) age;
     };
     backupFileExtension = "backup";
     users = {
@@ -116,9 +119,9 @@ in
 
   services.openssh.enable = true;
   programs.steam.enable = true;
-  programs.zsh.enable = true; # system-wide needed in addition to home-manager
+  programs.zsh.enable = true; # INFO: system-wide needed in addition to home-manager
 
   time.timeZone = "Europe/Vienna";
   i18n.defaultLocale = "en_US.UTF-8";
-  system.stateVersion = "24.11"; #WARN: DO NOT! EDIT!!
+  system.stateVersion = "24.11"; # WARN: DO NOT! EDIT!!
 }
