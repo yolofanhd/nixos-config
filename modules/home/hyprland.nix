@@ -126,7 +126,7 @@
       exec-once = [
         "swww-daemon"
         "waybar"
-        "[ workspace 1 silent ] kitty"
+        "[ workspace 1 silent ] kitty -e tmux"
         "[ workspace 1 silent ] zen"
         "[ workspace 3 silent ] spotify"
         "[ workspace 3 silent ] discord"
@@ -134,6 +134,13 @@
         "swww img /home/${username}/Pictures/wallpaper.png"
         "hyprctl output create headless"
         "wayvnc 0.0.0.0"
+      ];
+      windowrule = [
+        "workspace 3 silent, class:^(.*iscord.*)$, title:^(.*iscord.*)$"
+        "float, title:^(.*Yubico Authenticator.*)$"
+        "size 360 700, title:^(.*Yubico Authenticator.*)$"
+        "float, title:^(Picture-in-Picture)$"
+        "pin, title:^(Picture-in-Picture)$"
       ];
       general = {
         gaps_in = 4;
@@ -204,22 +211,16 @@
       };
       "$mainMod" = "ALT";
       bind = [
-        "ALT SHIFT,Q,exit,"
+        "$mainMod SHIFT,Q,exit,"
         "$mainMod,Q,exec,hyprlock"
         "$mainMod,S,exec,wofi --show drun"
-        "$mainMod,RETURN,exec,kitty"
-        "$mainMod,G,exec,firefox"
-        "$mainMod,N,exec,kitty -e nvim"
+        "$mainMod,RETURN,exec,kitty -e tmux"
         "$mainMod,C,killactive,"
 
         "$mainMod SHIFT,H,movewindow,l"
         "$mainMod SHIFT,J,movewindow,d"
         "$mainMod SHIFT,K,movewindow,u"
         "$mainMod SHIFT,L,movewindow,r"
-        "$mainMod SHIFT,H,movefocus,l"
-        "$mainMod SHIFT,J,movefocus,d"
-        "$mainMod SHIFT,K,movefocus,u"
-        "$mainMod SHIFT,L,movefocus,r"
 
         "$mainMod,H,movefocus,l"
         "$mainMod,J,movefocus,d"

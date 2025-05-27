@@ -8,7 +8,7 @@ rebuild:
     sudo nixos-rebuild switch --flake ./#$($HOST)
     git restore --staged hardware-configuration.nix
 
-# RUns nix flake check
+# Runs nix flake check
 test:
     touch hardware-configuration.nix
     rm hardware-configuration.nix
@@ -29,3 +29,12 @@ test:
     git add ./hardware-configuration.nix -f
     nix flake check
     git restore --staged hardware-configuration.nix
+
+# Runs nix flake update & just rebuild
+update:
+    nix flake update
+    ln /etc/nixos/hardware-configuration.nix ./ -f
+    git add ./hardware-configuration.nix -f
+    sudo nixos-rebuild switch --flake ./#$($HOST)
+    git restore --staged hardware-configuration.nix
+

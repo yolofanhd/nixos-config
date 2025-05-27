@@ -31,7 +31,6 @@ in
       (modulePrefix + /systemd.nix)
       (modulePrefix + /nix-defaults.nix)
       (modulePrefix + /gnupg.nix)
-      (modulePrefix + /tailscale.nix)
       inputs.home-manager.nixosModules.default
     ];
 
@@ -42,19 +41,20 @@ in
   environment = {
     shells = [ pkgs.zsh ];
     systemPackages = with pkgs; [
-      prusa-slicer
       btop
+      prusa-slicer
       cmake
       docker
       gcc
+      ghostscript
       git
       htop
+      mermaid-cli
       pinentry-curses
       polkit
       polkit_gnome
       python3
       sbctl
-      tailscale
       tree
       unzip
       vim
