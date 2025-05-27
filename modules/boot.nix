@@ -14,6 +14,20 @@
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
     ];
 
+    kernelModules = [
+      "nvme"
+      "nvidia"
+    ];
+
+    initrd.kernelModules = [
+      "nvidia"
+      "nvidia_modeset"
+      "nvidia_uvm"
+      "nvidia_drm"
+      "nvme"
+      "ext4"
+    ];
+
     loader.efi.canTouchEfiVariables = true;
     # NOTE: Lanzaboote currently replaces the systemd-boot module.
     # This setting is usually set to true in configuration.nix
@@ -34,5 +48,5 @@
     supportedFilesystems = [ "ntfs" ];
   };
 
-  fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];
+  fileSystems."/".options = [ "defaults" "noatime" "discard" ];
 }

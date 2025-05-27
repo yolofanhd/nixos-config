@@ -24,6 +24,14 @@ in
   ];
 
   # INFO: Only contains packages related to home configuration
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "gruvbox_dark";
+      theme_background = false;
+    };
+  };
+
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
