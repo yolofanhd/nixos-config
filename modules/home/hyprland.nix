@@ -99,6 +99,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
+    xwayland.enable = true;
     settings = {
       inherit monitor;
       env = [
@@ -114,7 +115,6 @@
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "QT_QPA_PLATFORMTHEME,qt5ct"
         "GBM_BACKEND,nvidia-drm"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
         "LIBVA_DRIVER_NAME,nvidia"
         "__GL_GSYNC_ALLOWED,1"
         "__GL_VRR_ALLOWED,0"
@@ -126,7 +126,7 @@
       exec-once = [
         "swww-daemon"
         "waybar"
-        "[ workspace 1 silent ] kitty"
+        "[ workspace 1 silent ] kitty -e tmux"
         "[ workspace 1 silent ] zen"
         "[ workspace 3 silent ] spotify"
         "[ workspace 3 silent ] discord"
@@ -134,6 +134,13 @@
         "swww img /home/${username}/Pictures/wallpaper.png"
         "hyprctl output create headless"
         "wayvnc 0.0.0.0"
+      ];
+      windowrule = [
+        "workspace 3 silent, class:^(.*iscord.*)$, title:^(.*iscord.*)$"
+        "float, title:^(.*Yubico Authenticator.*)$"
+        "size 360 700, title:^(.*Yubico Authenticator.*)$"
+        "float, title:^(Picture-in-Picture)$"
+        "pin, title:^(Picture-in-Picture)$"
       ];
       general = {
         gaps_in = 4;
@@ -143,6 +150,11 @@
         "col.inactive_border" = "0xff1b1b1b";
         layout = "dwindle";
       };
+
+      cursor = {
+        no_hardware_cursors = 1;
+      };
+
       decoration = {
         rounding = 10;
         dim_inactive = false;
@@ -199,22 +211,16 @@
       };
       "$mainMod" = "ALT";
       bind = [
-        "ALT SHIFT,Q,exit,"
+        "$mainMod SHIFT,Q,exit,"
         "$mainMod,Q,exec,hyprlock"
         "$mainMod,S,exec,wofi --show drun"
-        "$mainMod,RETURN,exec,kitty"
-        "$mainMod,G,exec,firefox"
-        "$mainMod,N,exec,kitty -e nvim"
+        "$mainMod,RETURN,exec,kitty -e tmux"
         "$mainMod,C,killactive,"
 
         "$mainMod SHIFT,H,movewindow,l"
         "$mainMod SHIFT,J,movewindow,d"
         "$mainMod SHIFT,K,movewindow,u"
         "$mainMod SHIFT,L,movewindow,r"
-        "$mainMod SHIFT,H,movefocus,l"
-        "$mainMod SHIFT,J,movefocus,d"
-        "$mainMod SHIFT,K,movefocus,u"
-        "$mainMod SHIFT,L,movefocus,r"
 
         "$mainMod,H,movefocus,l"
         "$mainMod,J,movefocus,d"
@@ -251,6 +257,8 @@
         "bind = $mainMod, mouse_up, workspace, e-1"
 
         ", XF86AudioPlay, exec, playerctl play-pause"
+        ", XF86AudioPause, exec, playerctl play-pause"
+        ", XF86AudioPlayPause, exec, playerctl play-pause"
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
         ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5.0%-"

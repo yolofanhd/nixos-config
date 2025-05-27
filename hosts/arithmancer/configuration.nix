@@ -3,6 +3,7 @@
 , lib
 , username
 , system
+, config
 , includeHardwareConfig
 , ...
 }:
@@ -40,13 +41,15 @@ in
   environment = {
     shells = [ pkgs.zsh ];
     systemPackages = with pkgs; [
-      prusa-slicer
       btop
+      prusa-slicer
       cmake
       docker
       gcc
+      ghostscript
       git
       htop
+      mermaid-cli
       pinentry-curses
       polkit
       polkit_gnome
@@ -85,7 +88,7 @@ in
         steam
         swww # background images
         texlive.combined.scheme-full
-        ungoogled-chromium
+        google-chrome
         vscodium
         waybar
         wayvnc
@@ -105,6 +108,7 @@ in
       inherit inputs;
       inherit username;
       inherit system;
+      inherit (config) age;
     };
     backupFileExtension = "backup";
     users = {
@@ -114,9 +118,9 @@ in
 
   services.openssh.enable = true;
   programs.steam.enable = true;
-  programs.zsh.enable = true; # system-wide needed in addition to home-manager
+  programs.zsh.enable = true; # INFO: system-wide needed in addition to home-manager
 
   time.timeZone = "Europe/Vienna";
   i18n.defaultLocale = "en_US.UTF-8";
-  system.stateVersion = "24.11"; #WARN: DO NOT! EDIT!!
+  system.stateVersion = "24.11"; # WARN: DO NOT! EDIT!!
 }

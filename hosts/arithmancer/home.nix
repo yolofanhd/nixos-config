@@ -16,11 +16,22 @@ in
       inherit username;
     })
     (prefix + /tmux.nix)
-    (prefix + /waybar-sidebar.nix)
+    (prefix + /waybar/sidebar.nix)
     (prefix + /wofi.nix)
     (prefix + /zsh.nix)
     (prefix + /kitty.nix)
+    (prefix + /git/git.nix)
   ];
+
+  # INFO: Only contains packages related to home configuration
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "gruvbox_dark";
+      theme_background = false;
+    };
+  };
+
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
@@ -30,6 +41,9 @@ in
       tmux
       inputs.myvim.packages.${system}.default
     ];
+
+    file.".gitignore_global".source = prefix + /git/.gitignore_global;
+    file.".git/hooks/commit-msg".source = prefix + /git/commit-msg;
 
     sessionVariables = {
       EDITOR = "nvim";

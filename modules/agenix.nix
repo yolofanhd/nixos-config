@@ -4,6 +4,12 @@ let
 in
 {
   age.secrets = {
+    uni-gitconfig = {
+      file = secret_prefix + /uni-gitconfig.age;
+      owner = username;
+      group = "users";
+    };
+
     github-shh = {
       file = secret_prefix + /github-ssh.age;
       path = "/home/${username}/.ssh/github-ssh";

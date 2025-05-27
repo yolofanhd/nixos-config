@@ -12,6 +12,8 @@ let
   systems = [ arithmancer spinorer pi4system pi5system ];
 in
 {
+  "uni-gitconfig.age".publicKeys = users ++ systems;
+
   "test.age".publicKeys = users ++ systems;
 
   "github-ssh.age".publicKeys = users ++ systems;
