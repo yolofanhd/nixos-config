@@ -118,7 +118,7 @@
         "LIBVA_DRIVER_NAME,nvidia"
         "__GL_GSYNC_ALLOWED,1"
         "__GL_VRR_ALLOWED,0"
-        "_JAVA_AWT_WM_NONEREPARENTING,1"
+        "_JAVA_AWT_WM_NONREPARENTING,1"
         "CLUTTER_BACKEND,wayland"
         "GDK_BACKEND,wayland"
         "WLR_NO_HARDWARE_CURSORS,1"
@@ -194,7 +194,6 @@
       misc = {
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
-        render_ahead_of_time = false;
         vrr = 2;
       };
       input = {

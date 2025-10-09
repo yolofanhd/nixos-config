@@ -77,7 +77,6 @@ in
         cheat
         discord
         docker
-        firefox
         gimp
         inputs.zen-browser.packages.${system}.default
         obs-studio

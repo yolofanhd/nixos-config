@@ -51,10 +51,8 @@ in
       polkit
       polkit_gnome
       sbctl
-      texlive.combined.scheme-full
       tree
       vim
-      vimPlugins.coc-clangd
       wget
       inputs.agenix.packages.${system}.default
     ];
@@ -76,7 +74,6 @@ in
         discord
         docker
         element-desktop
-        firefox
         gimp
         inputs.myvim.packages.${system}.default
         just
@@ -89,7 +86,7 @@ in
         google-chrome
         unzip
         vscodium
-        waybar
+        inputs.waybar.packages.${system}.default
         wayshot # for screenshotting in wayland cli tool
         wayvnc
         wl-clipboard

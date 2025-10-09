@@ -2,7 +2,10 @@
 , pkgs
 , ...
 }: {
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = [
+    "nvidia"
+    "modesetting"
+  ];
 
   hardware.graphics = {
     enable = true;
@@ -17,9 +20,10 @@
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = true;
-    open = false;
+    powerManagement.finegrained = true;
+    open = true;
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.production;
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
 
   boot.kernelModules = [
@@ -28,4 +32,13 @@
     "nvidia_uvm"
     "nvidia_drm"
   ];
+
+  hardware.nvidia.prime = {
+    offload = {
+      enable = true;
+      enableOffloadCmd = true;
+    };
+    intelBusId = "PCI:0:0:2";
+    nvidiaBusId = "PCI:0:1:0";
+  };
 }

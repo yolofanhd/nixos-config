@@ -23,6 +23,19 @@ in
       group = "users";
     };
 
+    gitlab-ssh = {
+      file = secret_prefix + /gitlab-ssh.age;
+      path = "/home/${username}/.ssh/gitlab-ssh";
+      owner = username;
+      group = "users";
+    };
+    gitlab-ssh-pub = {
+      file = secret_prefix + /gitlab-ssh.pub.age;
+      path = "/home/${username}/.ssh/gitlab-ssh.pub";
+      owner = username;
+      group = "users";
+    };
+
     oracle-shh = {
       file = secret_prefix + /oracle-ssh.age;
       path = "/home/${username}/.ssh/oracle-ssh";

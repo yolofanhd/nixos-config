@@ -19,6 +19,9 @@ in
   "github-ssh.age".publicKeys = users ++ systems;
   "github-ssh.pub.age".publicKeys = users ++ systems;
 
+  "gitlab-ssh.age".publicKeys = users ++ systems;
+  "gitlab-ssh.pub.age".publicKeys = users ++ systems;
+
   "oracle-ssh.age".publicKeys = users ++ systems;
   "oracle-ssh.pub.age".publicKeys = users ++ systems;
 
