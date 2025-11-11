@@ -60,6 +60,7 @@ in
       vim
       wget
       inputs.agenix.packages.${system}.default
+      inputs.pwndbg.packages.${system}.default
     ];
   };
 
@@ -93,7 +94,6 @@ in
         wayvnc
         wayshot # for screenshotting in wayland cli tool
         wl-clipboard
-        xplorer
         yubioath-flutter
         zathura # pdf reader
         zip

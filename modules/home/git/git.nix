@@ -1,7 +1,7 @@
 { age, ... }: {
   programs.git = {
     enable = true;
-    extraConfig = {
+    settings = {
       alias = {
         branch = "branch -vv";
         log = "log --decorate --all --graph";

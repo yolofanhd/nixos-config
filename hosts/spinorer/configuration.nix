@@ -91,7 +91,6 @@ in
         wayvnc
         wl-clipboard
         wofi
-        xplorer
         yubioath-flutter
         inputs.zen-browser.packages.${system}.default
         zathura

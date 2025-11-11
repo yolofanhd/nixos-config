@@ -1,9 +1,10 @@
-{ pkgs
-, inputs
-, username
-, modulePrefix
-, system
-, ...
+{
+  pkgs,
+  inputs,
+  username,
+  modulePrefix,
+  system,
+  ...
 }:
 let
   prefix = modulePrefix + /home;
@@ -44,6 +45,13 @@ in
 
     file.".gitignore_global".source = prefix + /git/.gitignore_global;
     file.".git/hooks/commit-msg".source = prefix + /git/commit-msg;
+
+    pointerCursor = {
+      gtk.enable = true;
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Classic";
+      size = 16;
+    };
 
     sessionVariables = {
       EDITOR = "nvim";
