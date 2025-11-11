@@ -1,11 +1,12 @@
-{ pkgs
-, inputs
-, lib
-, username
-, system
-, config
-, includeHardwareConfig
-, ...
+{
+  pkgs,
+  inputs,
+  lib,
+  username,
+  system,
+  config,
+  includeHardwareConfig,
+  ...
 }:
 let
   rootPrefix = ./../..;
@@ -13,11 +14,10 @@ let
 in
 {
   imports =
-    lib.optionals includeHardwareConfig
-      [
-        (rootPrefix + /hardware-configuration.nix)
-        (modulePrefix + /boot.nix)
-      ]
+    lib.optionals includeHardwareConfig [
+      (rootPrefix + /hardware-configuration.nix)
+      (modulePrefix + /boot.nix)
+    ]
     ++ [
       (modulePrefix + /agenix.nix)
       (modulePrefix + /wayland.nix)
@@ -46,6 +46,7 @@ in
       cmake
       docker
       gcc
+      clang
       ghostscript
       git
       htop
@@ -69,7 +70,10 @@ in
     users.${username} = {
       isNormalUser = true;
       useDefaultShell = true;
-      extraGroups = [ "wheel" "docker" ];
+      extraGroups = [
+        "wheel"
+        "docker"
+      ];
       initialPassword = "nixos";
       packages = with pkgs; [
         anki-bin
@@ -80,6 +84,7 @@ in
         docker
         gimp
         inputs.zen-browser.packages.${system}.default
+        just
         obs-studio
         obsidian # note taking app
         signal-desktop
@@ -90,7 +95,7 @@ in
         texlive.combined.scheme-full
         google-chrome
         vscodium
-        waybar
+        inputs.waybar.packages.${system}.default
         wayvnc
         wayshot # for screenshotting in wayland cli tool
         wl-clipboard

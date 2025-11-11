@@ -1,9 +1,10 @@
-{ pkgs
-, inputs
-, username
-, modulePrefix
-, system
-, ...
+{
+  pkgs,
+  inputs,
+  username,
+  modulePrefix,
+  system,
+  ...
 }:
 let
   prefix = modulePrefix + /home;
@@ -23,14 +24,21 @@ in
     (prefix + /git/git.nix)
   ];
 
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "gruvbox_dark";
+      theme_background = false;
+    };
+  };
+
   # INFO: Only contains packages related to home configuration
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
     packages = with pkgs; [
       kitty
-      swww
-      slurp
+      zsh
       tmux
       inputs.myvim.packages.${system}.default
     ];
@@ -38,10 +46,17 @@ in
     file.".gitignore_global".source = prefix + /git/.gitignore_global;
     file.".git/hooks/commit-msg".source = prefix + /git/commit-msg;
 
+    pointerCursor = {
+      gtk.enable = true;
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Classic";
+      size = 16;
+    };
+
     sessionVariables = {
       EDITOR = "nvim";
     };
 
-    stateVersion = "24.11"; # WARN: do not change (could contain breaking changes)
+    stateVersion = "24.11"; # WARN: DO NOT! EDIT!!
   };
 }

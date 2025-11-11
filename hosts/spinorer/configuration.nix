@@ -1,11 +1,12 @@
-{ pkgs
-, inputs
-, lib
-, username
-, system
-, includeHardwareConfig
-, config
-, ...
+{
+  pkgs,
+  inputs,
+  lib,
+  username,
+  system,
+  includeHardwareConfig,
+  config,
+  ...
 }:
 let
   rootPrefix = ./../..;
@@ -13,11 +14,10 @@ let
 in
 {
   imports =
-    lib.optionals includeHardwareConfig
-      [
-        (rootPrefix + /hardware-configuration.nix)
-        (modulePrefix + /boot.nix)
-      ]
+    lib.optionals includeHardwareConfig [
+      (rootPrefix + /hardware-configuration.nix)
+      (modulePrefix + /boot.nix)
+    ]
     ++ [
       (modulePrefix + /agenix.nix)
       (modulePrefix + /wayland.nix)
@@ -45,6 +45,7 @@ in
       cmake
       docker
       gcc
+      clang
       git
       htop
       pinentry-curses
@@ -55,6 +56,7 @@ in
       vim
       wget
       inputs.agenix.packages.${system}.default
+      inputs.pwndbg.packages.${system}.default
     ];
   };
 
@@ -63,11 +65,15 @@ in
     users.${username} = {
       isNormalUser = true;
       useDefaultShell = true;
-      extraGroups = [ "wheel" "tss" "docker" ];
+      extraGroups = [
+        "wheel"
+        "tss"
+        "docker"
+      ];
       shell = pkgs.zsh;
       packages = with pkgs; [
         anki-bin
-        bitwarden
+        #bitwarden
         brightnessctl
         blender
         cheat
@@ -75,7 +81,6 @@ in
         docker
         element-desktop
         gimp
-        inputs.myvim.packages.${system}.default
         just
         obs-studio
         obsidian

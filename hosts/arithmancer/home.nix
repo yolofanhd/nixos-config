@@ -24,7 +24,6 @@ in
     (prefix + /git/git.nix)
   ];
 
-  # INFO: Only contains packages related to home configuration
   programs.btop = {
     enable = true;
     settings = {
@@ -33,6 +32,7 @@ in
     };
   };
 
+  # INFO: Only contains packages related to home configuration
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
