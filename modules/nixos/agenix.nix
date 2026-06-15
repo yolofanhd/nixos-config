@@ -1,9 +1,15 @@
 { username, ... }:
 let
-  secret_prefix = ../secrets;
+  secret_prefix = ../../secrets;
 in
 {
   age.secrets = {
+    uni-gitconfig = {
+      file = secret_prefix + /uni-gitconfig.age;
+      owner = username;
+      group = "users";
+    };
+
     github-shh = {
       file = secret_prefix + /github-ssh.age;
       path = "/home/${username}/.ssh/github-ssh";
@@ -13,6 +19,19 @@ in
     github-shh-pub = {
       file = secret_prefix + /github-ssh.pub.age;
       path = "/home/${username}/.ssh/github-ssh.pub";
+      owner = username;
+      group = "users";
+    };
+
+    gitlab-ssh = {
+      file = secret_prefix + /gitlab-ssh.age;
+      path = "/home/${username}/.ssh/gitlab-ssh";
+      owner = username;
+      group = "users";
+    };
+    gitlab-ssh-pub = {
+      file = secret_prefix + /gitlab-ssh.pub.age;
+      path = "/home/${username}/.ssh/gitlab-ssh.pub";
       owner = username;
       group = "users";
     };

@@ -3,10 +3,16 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-zed.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.1";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     rpi5-flake.url = "git+https://gitlab.com/vriska/nix-rpi5.git";
+
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager.url = "github:nix-community/home-manager";
     myvim.url = "github:yolofanhd/nixvim-config";
@@ -34,12 +40,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.darwin.follows = "";
     };
+
+    waybar = {
+      url = "github:Alexays/Waybar";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    pwndbg = {
+      url = "github:pwndbg/pwndbg";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     { self
     , nixpkgs
     , nixpkgs-stable
+    , nix-darwin
     , lanzaboote
     , nixos-generators
     , agenix
@@ -67,22 +84,6 @@
             lanzaboote.nixosModules.lanzaboote
           ];
         };
-        spinorer = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
-            includeHardwareConfig = true;
-            system = "x86_64-linux";
-            hostName = "spinorer";
-            username = "vectorix";
-          };
-          modules = [
-            ./hosts/spinorer/configuration.nix
-            inputs.home-manager.nixosModules.default
-            agenix.nixosModules.default
-            lanzaboote.nixosModules.lanzaboote
-          ];
-        };
-
         rpi5 = nixpkgs-stable.lib.nixosSystem {
           system = "aarch64-linux";
           specialArgs = {
@@ -118,50 +119,21 @@
             inputs.home-manager.nixosModules.default
           ];
         };
-
-        image = {
-          arithmancer = nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              includeHardwareConfig = false;
-              system = "x86_64-linux";
-              hostName = "arithmancer";
-              username = "fractalix";
-            };
-            modules = [
-              ./hosts/arithmancer/configuration.nix
-              inputs.home-manager.nixosModules.default
-              self.nixosModules.myFormats
-            ];
+      };
+      darwinConfigurations = {
+        macos = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = {
+            inherit inputs;
+            system = "aarch64-darwin";
+            hostName = "macos";
+            username = "dl";
           };
-          spinorer = nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              includeHardwareConfig = false;
-              system = "x86_64-linux";
-              hostName = "spinorer";
-              username = "vectorix";
-            };
-            modules = [
-              ./hosts/spinorer/configuration.nix
-              inputs.home-manager.nixosModules.default
-              self.nixosModules.myFormats
-            ];
-          };
-          rpi5 = nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              includeHardwareConfig = false;
-              system = "aarch64-linux";
-              hostName = "rpi5";
-              username = "pi";
-            };
-            modules = [
-              ./hosts/rpi5/configuration.nix
-              inputs.home-manager.nixosModules.default
-              self.nixosModules.myFormats
-            ];
-          };
+          modules = [
+            ./hosts/darwin/configuration.nix
+            inputs.home-manager.darwinModules.default
+            agenix.darwinModules.default
+          ];
         };
       };
     };

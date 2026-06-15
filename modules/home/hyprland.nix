@@ -1,7 +1,9 @@
-{ monitor
-, username
-, ...
-}: {
+{
+  monitor,
+  username,
+  ...
+}:
+{
   services.hypridle = {
     enable = true;
     settings = {
@@ -99,6 +101,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
+    xwayland.enable = true;
     settings = {
       inherit monitor;
       env = [
@@ -114,11 +117,10 @@
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "QT_QPA_PLATFORMTHEME,qt5ct"
         "GBM_BACKEND,nvidia-drm"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
         "LIBVA_DRIVER_NAME,nvidia"
         "__GL_GSYNC_ALLOWED,1"
         "__GL_VRR_ALLOWED,0"
-        "_JAVA_AWT_WM_NONEREPARENTING,1"
+        "_JAVA_AWT_WM_NONREPARENTING,1"
         "CLUTTER_BACKEND,wayland"
         "GDK_BACKEND,wayland"
         "WLR_NO_HARDWARE_CURSORS,1"
@@ -126,14 +128,21 @@
       exec-once = [
         "swww-daemon"
         "waybar"
-        "[ workspace 1 silent ] kitty"
-        "[ workspace 1 silent ] zen"
+        "[ workspace 1 silent ] kitty -e tmux"
+        "[ workspace 1 silent ] zen-beta"
         "[ workspace 3 silent ] spotify"
         "[ workspace 3 silent ] discord"
         "[ workspace 3 silent ] signal-desktop"
         "swww img /home/${username}/Pictures/wallpaper.png"
         "hyprctl output create headless"
         "wayvnc 0.0.0.0"
+      ];
+      windowrule = [
+        "workspace 3 silent, class:^(.*iscord.*)$, title:^(.*iscord.*)$"
+        "float, title:^(.*Yubico Authenticator.*)$"
+        "size 360 700, title:^(.*Yubico Authenticator.*)$"
+        "float, title:^(Picture-in-Picture)$"
+        "pin, title:^(Picture-in-Picture)$"
       ];
       general = {
         gaps_in = 4;
@@ -142,7 +151,19 @@
         "col.active_border" = "0xff5a5a5a";
         "col.inactive_border" = "0xff1b1b1b";
         layout = "dwindle";
+
+        snap = {
+          enabled = true;
+          window_gap = 4;
+          monitor_gap = 5;
+          respect_gaps = true;
+        };
       };
+
+      cursor = {
+        no_hardware_cursors = 1;
+      };
+
       decoration = {
         rounding = 10;
         dim_inactive = false;
@@ -159,13 +180,39 @@
 
       animations = {
         enabled = true;
-        bezier = "myBezier, 0.21, 0.52, 0.76, 0.46";
+
+        bezier = [
+          "expressiveFastSpatial, 0.42, 1.67, 0.21, 0.90"
+          "expressiveSlowSpatial, 0.39, 1.29, 0.35, 0.98"
+          "expressiveDefaultSpatial, 0.38, 1.21, 0.22, 1.00"
+          "emphasizedDecel, 0.05, 0.7, 0.1, 1"
+          "emphasizedAccel, 0.3, 0, 0.8, 0.15"
+          "standardDecel, 0, 0, 0, 1"
+          "menu_decel, 0.1, 1, 0, 1"
+          "menu_accel, 0.52, 0.03, 0.72, 0.08"
+        ];
+
         animation = [
-          "windows, 1, 0.8, myBezier"
-          "windowsOut, 1, 1, default"
-          "border, 1, 0.2, default"
-          "fade, 1, 0.5, default"
-          "workspaces, 1, 2.5, default"
+          # windows
+          "windowsIn, 1, 3, emphasizedDecel, popin 80%"
+          "windowsOut, 1, 2, emphasizedDecel, popin 90%"
+          "windowsMove, 1, 3, emphasizedDecel, slide"
+          "border, 1, 10, emphasizedDecel"
+
+          # layers
+          "layersIn, 1, 2.7, emphasizedDecel, popin 93%"
+          "layersOut, 1, 2.4, menu_accel, popin 94%"
+
+          # fade
+          "fadeLayersIn, 1, 0.5, menu_decel"
+          "fadeLayersOut, 1, 2.7, menu_accel"
+
+          # workspaces
+          "workspaces, 1, 7, menu_decel, slide"
+
+          # specialWorkspace
+          "specialWorkspaceIn, 1, 2.8, emphasizedDecel, slidevert"
+          "specialWorkspaceOut, 1, 1.2, emphasizedAccel, slidevert"
         ];
       };
       dwindle = {
@@ -173,16 +220,9 @@
         preserve_split = true; # you probably want this
       };
 
-      gestures = {
-        workspace_swipe = true;
-        workspace_swipe_touch = true;
-        workspace_swipe_touch_invert = false;
-      };
-
       misc = {
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
-        render_ahead_of_time = false;
         vrr = 2;
       };
       input = {
@@ -199,22 +239,16 @@
       };
       "$mainMod" = "ALT";
       bind = [
-        "ALT SHIFT,Q,exit,"
+        "$mainMod SHIFT,Q,exit,"
         "$mainMod,Q,exec,hyprlock"
         "$mainMod,S,exec,wofi --show drun"
-        "$mainMod,RETURN,exec,kitty"
-        "$mainMod,G,exec,firefox"
-        "$mainMod,N,exec,kitty -e nvim"
+        "$mainMod,RETURN,exec,kitty -e tmux"
         "$mainMod,C,killactive,"
 
         "$mainMod SHIFT,H,movewindow,l"
         "$mainMod SHIFT,J,movewindow,d"
         "$mainMod SHIFT,K,movewindow,u"
         "$mainMod SHIFT,L,movewindow,r"
-        "$mainMod SHIFT,H,movefocus,l"
-        "$mainMod SHIFT,J,movefocus,d"
-        "$mainMod SHIFT,K,movefocus,u"
-        "$mainMod SHIFT,L,movefocus,r"
 
         "$mainMod,H,movefocus,l"
         "$mainMod,J,movefocus,d"
@@ -251,6 +285,8 @@
         "bind = $mainMod, mouse_up, workspace, e-1"
 
         ", XF86AudioPlay, exec, playerctl play-pause"
+        ", XF86AudioPause, exec, playerctl play-pause"
+        ", XF86AudioPlayPause, exec, playerctl play-pause"
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
         ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5.0%-"

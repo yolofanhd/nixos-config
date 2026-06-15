@@ -1,9 +1,10 @@
-{ pkgs
-, inputs
-, username
-, modulePrefix
-, system
-, ...
+{
+  pkgs,
+  inputs,
+  username,
+  modulePrefix,
+  system,
+  ...
 }:
 let
   prefix = modulePrefix + /home;
@@ -16,11 +17,22 @@ in
       inherit username;
     })
     (prefix + /tmux.nix)
-    (prefix + /waybar-sidebar.nix)
+    (prefix + /waybar/sidebar.nix)
     (prefix + /wofi.nix)
     (prefix + /zsh.nix)
     (prefix + /kitty.nix)
+    (prefix + /git/git.nix)
   ];
+
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "gruvbox_dark";
+      theme_background = false;
+    };
+  };
+
+  # INFO: Only contains packages related to home configuration
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
@@ -30,6 +42,16 @@ in
       tmux
       inputs.myvim.packages.${system}.default
     ];
+
+    file.".gitignore_global".source = prefix + /git/.gitignore_global;
+    file.".git/hooks/commit-msg".source = prefix + /git/commit-msg;
+
+    pointerCursor = {
+      gtk.enable = true;
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Classic";
+      size = 16;
+    };
 
     sessionVariables = {
       EDITOR = "nvim";

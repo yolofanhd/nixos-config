@@ -1,3 +1,5 @@
-hardware-configuration.nix
 result
+hardware-configuration.nix
+.env*
+!.env.sample
 ~
