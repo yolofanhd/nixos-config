@@ -1,15 +1,28 @@
-# Justfile to make rebuilding nixos systems easier
+set dotenv-load := true
 
-# Rebuild system based on host set in .env
-# Links /etc/nixos/hardware-configuration.nix
+# Justfile to make rebuilding systems easier
+
+# Rebuild system based on HOST set in .env.
 rebuild:
-    ln /etc/nixos/hardware-configuration.nix ./ -f
-    git add ./hardware-configuration.nix -f
-    sudo nixos-rebuild switch --flake ./#$($HOST)
-    git restore --staged hardware-configuration.nix
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    host="${HOST:?Set HOST in .env, for example HOST=macos or HOST=arithmancer}"
+
+    if [[ "$host" == "macos" || "$host" == "darwin" ]]; then
+      darwin-rebuild switch --flake "./#macos"
+    else
+      ln -f /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
+      git add ./hardware-configuration.nix -f
+      trap 'git restore --staged hardware-configuration.nix || true' EXIT
+      sudo nixos-rebuild switch --flake "./#${host}"
+    fi
 
 # Runs nix flake check
 test:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
     touch hardware-configuration.nix
     rm hardware-configuration.nix
     echo "{" > hardware-configuration.nix
@@ -27,14 +40,13 @@ test:
 
     echo "}" >> hardware-configuration.nix
     git add ./hardware-configuration.nix -f
+    trap 'git restore --staged hardware-configuration.nix || true' EXIT
     nix flake check
-    git restore --staged hardware-configuration.nix
 
 # Runs nix flake update & just rebuild
 update:
-    nix flake update
-    ln /etc/nixos/hardware-configuration.nix ./ -f
-    git add ./hardware-configuration.nix -f
-    sudo nixos-rebuild switch --flake ./#$($HOST)
-    git restore --staged hardware-configuration.nix
+    #!/usr/bin/env bash
+    set -euo pipefail
 
+    nix flake update
+    just rebuild

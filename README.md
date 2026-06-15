@@ -39,11 +39,13 @@ cp .env.sample .env
 vi .env
 ```
 
-3. Check if `/etc/nixos/hardware-configuration.nix` is present. If not run:
+3. On NixOS, check if `/etc/nixos/hardware-configuration.nix` is present. If not run:
 
 ```bash
 nixos-generate-config
 ```
+
+This step is not needed on Darwin.
 
 4. Rebuild the system
 
@@ -53,17 +55,37 @@ just rebuild
 
 ### Updating the configuration
 
-The following two commands are used to update 1. the nix flake and 2. the system.
+The following command updates the flake and rebuilds the host configured in `.env`.
 
 ```bash
-sudo nix flake update
-sudo nixos-rebuild switch --flake './#<host-name>'
+just update
 ```
 
-Normally there should be no need to update this flake manually as the update process
-is pretty much automated.
+For manual rebuilds, use the matching command for the platform:
+
+```bash
+sudo nixos-rebuild switch --flake './#<host-name>'
+darwin-rebuild switch --flake './#macos'
+```
 
 For more information look at: [NixOS docs](https://nixos.wiki/wiki/flakes)
+
+### Darwin
+
+Set `HOST=macos` in `.env`, then run:
+
+```bash
+just rebuild
+```
+
+This runs:
+
+```bash
+darwin-rebuild switch --flake './#macos'
+```
+
+If `darwin-rebuild` is not on your `PATH` yet, restart the terminal after the first
+nix-darwin activation.
 
 ### Agenix
 
