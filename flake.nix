@@ -84,22 +84,6 @@
             lanzaboote.nixosModules.lanzaboote
           ];
         };
-        spinorer = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
-            includeHardwareConfig = true;
-            system = "x86_64-linux";
-            hostName = "spinorer";
-            username = "vectorix";
-          };
-          modules = [
-            ./hosts/spinorer/configuration.nix
-            inputs.home-manager.nixosModules.default
-            agenix.nixosModules.default
-            lanzaboote.nixosModules.lanzaboote
-          ];
-        };
-
         rpi5 = nixpkgs-stable.lib.nixosSystem {
           system = "aarch64-linux";
           specialArgs = {
