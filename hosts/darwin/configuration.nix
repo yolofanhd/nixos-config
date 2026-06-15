@@ -23,6 +23,11 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
+  security.pam.services.sudo_local = {
+    touchIdAuth = true;
+    reattach = true;
+  };
+
   environment = {
     shells = [ pkgs.zsh ];
     systemPackages = with pkgs; [
