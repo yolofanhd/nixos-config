@@ -22,15 +22,15 @@ in
     ++ lib.optionals isPi5
       [
         ./pi5.nix
-        (modulePrefix + /k3s/main-node.nix)
+        (modulePrefix + /nixos/k3s/main-node.nix)
       ]
     ++ lib.optionals isNotMain
       [
-        (modulePrefix + /k3s/node.nix)
+        (modulePrefix + /nixos/k3s/node.nix)
       ]
     ++ [
-      (modulePrefix + /nix-defaults.nix)
-      (modulePrefix + /agenix.nix)
+      (modulePrefix + /nixos/nix-defaults.nix)
+      (modulePrefix + /nixos/agenix.nix)
       inputs.home-manager.nixosModules.default
     ];
   environment.systemPackages = with pkgs; [

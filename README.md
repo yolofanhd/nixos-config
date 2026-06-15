@@ -74,7 +74,7 @@ cd ./secrets
 agenix -e <filename>
 ```
 
-Then the secrets can be decrypted when rebuilding using the `modules/agenix.nix` file where you specify location and access rules for your file.
+Then the secrets can be decrypted when rebuilding using the `modules/nixos/agenix.nix` file where you specify location and access rules for your file.
 
 ### Raspberry pi 5 Setup
 
@@ -154,7 +154,7 @@ Secure is still experimental, but I found it to work quite well.
 Here is a step by step introction:
 
 1. `sudo sbctl create-keys`
-2. Add lanzaboote to the nix config. (example in [boot.nix](./modules/boot.nix))
+2. Add lanzaboote to the nix config. (example in [boot.nix](./modules/nixos/boot.nix))
 3. `sudo sbctl verify` and verify that the boot entries which are relevant are signed.
 4. Reboot into your UEFI/BIOS and enable SecureBoot and enable Boot Setup mode
 5. Boot the system and enroll the keys `sudo sbctl enroll-keys --microsoft`
@@ -193,7 +193,7 @@ A quick summary:
 > When working with the volumes keep in mind that the name doesn't match with the
 > physical partition name, so just be sure to always use the provided name from
 > the mapper!\
-> There also is another setting for encrypted devices in the [boot.nix](./modules/boot.nix)
+> There also is another setting for encrypted devices in the [boot.nix](./modules/nixos/boot.nix)
 > file. It just ensures that the device is used and can safely be ignored due to automatic
 > generation. (e.g. the same setting is set anyway in `hardware-configuration.nix`)
 

@@ -16,21 +16,21 @@ in
   imports =
     lib.optionals includeHardwareConfig [
       (rootPrefix + /hardware-configuration.nix)
-      (modulePrefix + /boot.nix)
+      (modulePrefix + /nixos/boot.nix)
     ]
     ++ [
-      (modulePrefix + /agenix.nix)
-      (modulePrefix + /wayland.nix)
-      (modulePrefix + /sound.nix)
-      (modulePrefix + /nvidia.nix)
-      (modulePrefix + /yubikey.nix)
-      (modulePrefix + /greetd.nix)
-      (modulePrefix + /dbus.nix)
-      (modulePrefix + /network.nix)
-      (modulePrefix + /bluetooth.nix)
-      (modulePrefix + /systemd.nix)
-      (modulePrefix + /nix-defaults.nix)
-      (modulePrefix + /gnupg.nix)
+      (modulePrefix + /nixos/agenix.nix)
+      (modulePrefix + /nixos/wayland.nix)
+      (modulePrefix + /nixos/sound.nix)
+      (modulePrefix + /nixos/nvidia.nix)
+      (modulePrefix + /nixos/yubikey.nix)
+      (modulePrefix + /nixos/greetd.nix)
+      (modulePrefix + /nixos/dbus.nix)
+      (modulePrefix + /nixos/network.nix)
+      (modulePrefix + /nixos/bluetooth.nix)
+      (modulePrefix + /nixos/systemd.nix)
+      (modulePrefix + /nixos/nix-defaults.nix)
+      (modulePrefix + /nixos/gnupg.nix)
       inputs.home-manager.nixosModules.default
     ];
 

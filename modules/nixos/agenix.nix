@@ -1,6 +1,6 @@
 { username, ... }:
 let
-  secret_prefix = ../secrets;
+  secret_prefix = ../../secrets;
 in
 {
   age.secrets = {
