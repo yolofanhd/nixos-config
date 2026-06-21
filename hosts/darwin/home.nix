@@ -13,7 +13,13 @@ in
     (prefix + /zsh.nix)
     (prefix + /kitty.nix)
     (prefix + /zed.nix)
+    (prefix + /zathura.nix)
   ];
+
+  targets.darwin = {
+    linkApps.enable = false;
+    copyApps.enable = true;
+  };
 
   programs.btop = {
     enable = true;

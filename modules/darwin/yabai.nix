@@ -1,5 +1,37 @@
-{ ... }:
+{ pkgs, ... }:
 let
+  singleWindowGaps = pkgs.writeShellScript "yabai-single-window-gaps" ''
+    set -eu
+
+    yabai=${pkgs.yabai}/bin/yabai
+    jq=${pkgs.jq}/bin/jq
+
+    set_space_spacing() {
+      space="$1"
+      padding="$2"
+      gap="$3"
+
+      "$yabai" -m config --space "$space" top_padding "$padding"
+      "$yabai" -m config --space "$space" bottom_padding "$padding"
+      "$yabai" -m config --space "$space" left_padding "$padding"
+      "$yabai" -m config --space "$space" right_padding "$padding"
+      "$yabai" -m config --space "$space" window_gap "$gap"
+    }
+
+    "$yabai" -m query --spaces \
+      | "$jq" -r '.[].index' \
+      | while read -r space; do
+        windows="$("$yabai" -m query --windows --space "$space" 2>/dev/null || printf '[]')"
+        tiled_count="$(printf '%s' "$windows" | "$jq" '[.[] | select(.["is-floating"] == false and .["is-minimized"] == false)] | length')"
+
+        if [ "$tiled_count" -le 1 ]; then
+          set_space_spacing "$space" 0 0
+        else
+          set_space_spacing "$space" 8 4
+        fi
+      done
+  '';
+
   desktops = [
     "1"
     "2"
@@ -15,8 +47,7 @@ let
   desktopBindings = builtins.concatStringsSep "\n" (
     map
       (desktop: ''
-        cmd - ${desktop} : yabai -m space --focus ${desktop}
-        cmd + shift - ${desktop} : yabai -m window --space ${desktop}; yabai -m space --focus ${desktop}
+        cmd + shift - ${desktop} : yabai -m window --space ${desktop}
       '')
       desktops
   );
@@ -51,6 +82,15 @@ in
       yabai -m rule --add app="^System Settings$" manage=off
       yabai -m rule --add app="^Calculator$" manage=off
       yabai -m rule --add title="Picture-in-Picture" manage=off sticky=on
+
+      ${singleWindowGaps}
+
+      yabai -m signal --add event=window_created action="${singleWindowGaps}"
+      yabai -m signal --add event=window_destroyed action="${singleWindowGaps}"
+      yabai -m signal --add event=window_moved action="${singleWindowGaps}"
+      yabai -m signal --add event=window_minimized action="${singleWindowGaps}"
+      yabai -m signal --add event=window_deminimized action="${singleWindowGaps}"
+      yabai -m signal --add event=space_changed action="${singleWindowGaps}"
     '';
   };
 

@@ -10,6 +10,36 @@
 let
   rootPrefix = ./../..;
   modulePrefix = rootPrefix + /modules;
+
+  prusaSlicer = pkgs.stdenvNoCC.mkDerivation {
+    pname = "PrusaSlicer";
+    version = "2.9.5";
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/prusa3d/PrusaSlicer/releases/download/version_2.9.5/PrusaSlicer-2.9.5.dmg";
+      hash = "sha256-53Bf9e7zFNToayUAhuJLp+w7KNJHIy5F4hFCDDGlcA8=";
+    };
+
+    nativeBuildInputs = [ pkgs.undmg ];
+    sourceRoot = ".";
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p "$out/Applications"
+      cp -R "Original Prusa Drivers/PrusaSlicer.app" "$out/Applications/"
+
+      runHook postInstall
+    '';
+
+    meta = {
+      description = "G-code generator for 3D printers";
+      homepage = "https://github.com/prusa3d/PrusaSlicer";
+      license = pkgs.lib.licenses.agpl3Only;
+      platforms = pkgs.lib.platforms.darwin;
+      mainProgram = "PrusaSlicer";
+    };
+  };
 in
 {
   imports = [
@@ -32,6 +62,7 @@ in
     shells = [ pkgs.zsh ];
     systemPackages = with pkgs; [
       btop
+      blender
       docker
       cmake
       gcc
@@ -42,6 +73,9 @@ in
       git
       just
       kitty
+      nil
+      nixd
+      prusaSlicer
       tree
       vim
       wget
@@ -73,6 +107,20 @@ in
   };
 
   system = {
+    defaults = {
+      NSGlobalDomain = {
+        NSAutomaticWindowAnimationsEnabled = false;
+        NSScrollAnimationEnabled = false;
+        NSWindowResizeTime = 0.001;
+      };
+
+      dock = {
+        expose-animation-duration = 0.03;
+        launchanim = false;
+        slow-motion-allowed = false;
+      };
+    };
+
     primaryUser = username;
     stateVersion = 6;
   };
