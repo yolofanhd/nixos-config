@@ -9,23 +9,19 @@ in
   ];
 
   age.secrets = {
-    uni-gitconfig = {
-      file = secret_prefix + /uni-gitconfig.age;
-      owner = username;
-      group = "staff";
-    };
-
-    github-shh = {
+    github-ssh = {
       file = secret_prefix + /github-ssh.age;
       path = "${home}/.ssh/github-ssh";
       owner = username;
       group = "staff";
+      mode = "600";
     };
-    github-shh-pub = {
+    github-ssh-pub = {
       file = secret_prefix + /github-ssh.pub.age;
       path = "${home}/.ssh/github-ssh.pub";
       owner = username;
       group = "staff";
+      mode = "644";
     };
 
     gitlab-ssh = {
@@ -33,25 +29,29 @@ in
       path = "${home}/.ssh/gitlab-ssh";
       owner = username;
       group = "staff";
+      mode = "600";
     };
     gitlab-ssh-pub = {
       file = secret_prefix + /gitlab-ssh.pub.age;
       path = "${home}/.ssh/gitlab-ssh.pub";
       owner = username;
       group = "staff";
+      mode = "644";
     };
 
-    oracle-shh = {
+    oracle-ssh = {
       file = secret_prefix + /oracle-ssh.age;
       path = "${home}/.ssh/oracle-ssh";
       owner = username;
       group = "staff";
+      mode = "600";
     };
-    oracle-shh-pub = {
+    oracle-ssh-pub = {
       file = secret_prefix + /oracle-ssh.pub.age;
       path = "${home}/.ssh/oracle-ssh.pub";
       owner = username;
       group = "staff";
+      mode = "644";
     };
 
     kubernetes = {

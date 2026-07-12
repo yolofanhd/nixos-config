@@ -10,7 +10,10 @@ rebuild:
     host="${HOST:?Set HOST in .env, for example HOST=macos or HOST=arithmancer}"
 
     if [[ "$host" == "macos" || "$host" == "darwin" ]]; then
-      darwin-rebuild switch --flake "./#macos"
+      if ! sudo git config --global --get-all safe.directory | grep -Fxq "$PWD"; then
+        sudo git config --global --add safe.directory "$PWD"
+      fi
+      sudo darwin-rebuild switch --flake "./#macos"
     else
       ln -f /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
       git add ./hardware-configuration.nix -f

@@ -145,18 +145,18 @@
         "pin, title:^(Picture-in-Picture)$"
       ];
       general = {
-        gaps_in = 4;
-        gaps_out = 8;
-        border_size = 2;
+        gaps_in = 0;
+        gaps_out = 0;
+        border_size = 0;
         "col.active_border" = "0xff5a5a5a";
         "col.inactive_border" = "0xff1b1b1b";
         layout = "dwindle";
 
         snap = {
           enabled = true;
-          window_gap = 4;
-          monitor_gap = 5;
-          respect_gaps = true;
+          window_gap = 0;
+          monitor_gap = 0;
+          respect_gaps = false;
         };
       };
 
@@ -165,7 +165,7 @@
       };
 
       decoration = {
-        rounding = 10;
+        rounding = 0;
         dim_inactive = false;
         dim_strength = 0.1;
         dim_special = 0.3;

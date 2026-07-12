@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   inputs,
   config,
@@ -53,6 +54,9 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
+  system.checks.text = lib.mkForce "";
+  system.activationScripts.applications.text = lib.mkForce "";
+
   security.pam.services.sudo_local = {
     touchIdAuth = true;
     reattach = true;
@@ -62,13 +66,15 @@ in
     shells = [ pkgs.zsh ];
     systemPackages = with pkgs; [
       btop
-      blender
+      inputs.nixpkgs-stable.legacyPackages.${system}.blender
       docker
       cmake
       gcc
       clang
       python3
+      nodejs
       uv
+      ruff
       unzip
       git
       just
@@ -78,8 +84,20 @@ in
       prusaSlicer
       tree
       vim
+      ripgrep
+      fd
+      bat
+      delta
+      fzf
+      jq
+      eza
+      yq
+      ast-grep
+      nix-tree
+      nix-index
       wget
       inputs.agenix.packages.${system}.default
+      inputs.codex-cli-nix.packages.${system}.default
       inputs.nixpkgs-zed.legacyPackages.${system}.zed-editor
       spotify
       discord

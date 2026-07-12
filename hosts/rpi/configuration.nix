@@ -31,7 +31,7 @@ in
     ++ [
       (modulePrefix + /nixos/nix-defaults.nix)
       (modulePrefix + /nixos/agenix.nix)
-      inputs.home-manager.nixosModules.default
+      inputs.home-manager-stable.nixosModules.default
     ];
   environment.systemPackages = with pkgs; [
     vim

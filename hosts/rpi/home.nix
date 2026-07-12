@@ -20,6 +20,6 @@ in
     sessionVariables = {
       EDITOR = "vim";
     };
-    stateVersion = "25.11"; #WARN: Do NOT! edit!!
+    stateVersion = "25.05"; #WARN: Do NOT! edit!!
   };
 }

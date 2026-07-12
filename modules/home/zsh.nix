@@ -8,6 +8,18 @@
     enableVteIntegration = true;
     syntaxHighlighting.enable = true;
 
+    initContent = ''
+      codex() {
+        if [[ -f flake.nix ]]; then
+          nix develop --command codex "$@"
+        elif [[ -f shell.nix ]]; then
+          nix-shell --run "command codex ''${(q)@}"
+        else
+          command codex "$@"
+        fi
+      }
+    '';
+
     history = {
       expireDuplicatesFirst = true;
       extended = true;

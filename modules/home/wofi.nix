@@ -24,39 +24,39 @@
         margin: 0px;
         border: 2px solid #333;
         background-color: #1b1b1b;
-        border-radius: 10px;
+        border-radius: 0;
         }
 
         #input {
         margin: 5px;
         border: none;
         color: #f8f8f2;
-        border-radius: 8px;
+        border-radius: 0;
         background-color: #2b2b2b;
         }
 
         #inner-box {
         margin: 5px;
         border: none;
-        border-radius: 10px;
+        border-radius: 0;
         background-color: #2b2b2b;
         }
 
         #outer-box {
         margin: 5px;
         border: none;
-        border-radius: 10px;
+        border-radius: 0;
         background-color: #1b1b1b;
         }
 
         #scroll {
         margin: 0px;
-        border-radius: 15px;
+        border-radius: 0;
         border: none;
         }
 
         #text {
-          border-radius: 15px;
+          border-radius: 0;
           margin: 5px;
           border: none;
           color: #f8f8f2;
@@ -71,12 +71,12 @@
         }
 
         #entry:selected {
-            border-radius: 2px;
+            border-radius: 0;
             background-color: #1b441b;
         }
 
         #entry:selected #text {
-            border-radius: 2px;
+            border-radius: 0;
         }
     '';
   };

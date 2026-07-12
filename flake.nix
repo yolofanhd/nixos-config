@@ -14,7 +14,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    home-manager.url = "github:nix-community/home-manager";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager-stable = {
+      url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     myvim.url = "github:yolofanhd/nixvim-config";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
@@ -61,7 +69,39 @@
     , nixos-generators
     , agenix
     , ...
-    } @ inputs: {
+    } @ inputs:
+    let
+      supportedSystems = [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
+
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+    in
+    {
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            packages = with pkgs; [
+              bash
+              git
+              just
+              nix
+            ];
+          };
+        }
+      );
+
+      formatter = forAllSystems (
+        system:
+        nixpkgs.legacyPackages.${system}.nixpkgs-fmt
+      );
+
       nixosModules.myFormats = { system, ... }: {
         imports = [
           nixos-generators.nixosModules.all-formats
@@ -98,7 +138,7 @@
           modules = [
             ./hosts/rpi/configuration.nix
             agenix.nixosModules.default
-            inputs.home-manager.nixosModules.default
+            inputs.home-manager-stable.nixosModules.default
           ];
         };
         rpi4 = nixpkgs-stable.lib.nixosSystem {
@@ -116,7 +156,7 @@
             ./hosts/rpi/configuration.nix
             agenix.nixosModules.default
             inputs.nixos-hardware.nixosModules.raspberry-pi-4
-            inputs.home-manager.nixosModules.default
+            inputs.home-manager-stable.nixosModules.default
           ];
         };
       };
