@@ -1,36 +1,45 @@
 { pkgs, ... }:
 let
-  singleWindowGaps = pkgs.writeShellScript "yabai-single-window-gaps" ''
-    set -eu
+  yabaiFork = pkgs.yabai.overrideAttrs (oldAttrs: {
+    src = pkgs.fetchFromGitHub {
+      owner = "agg23";
+      repo = "yabai";
+      rev = "d0d387d1445048415fd1f3566393a191fe3c5097";
+      hash = "sha256-6tNi20q8K4LeNETjFA5nEDqcSVSBYvRFbzcJbDx7ntA=";
+    };
 
-    yabai=${pkgs.yabai}/bin/yabai
-    jq=${pkgs.jq}/bin/jq
+    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [ pkgs.llvmPackages.lld ];
 
-    set_space_spacing() {
-      space="$1"
-      padding="$2"
-      gap="$3"
+    postPatch = oldAttrs.postPatch + ''
+      substituteInPlace makefile \
+        --replace-fail 'clang -isystem' 'clang -fuse-ld=lld -isystem'
+      substituteInPlace src/space_manager.c \
+        --replace-fail \
+          'CGEventSetDoubleValueField(ev, 124, -sign);' \
+          'CGEventSetDoubleValueField(ev, 124, sign);' \
+        --replace-fail \
+          'CGEventSetDoubleValueField(ev, 129, -sign * 9999.0);' \
+          'CGEventSetDoubleValueField(ev, 129, sign * 9999.0);'
+    '';
 
-      "$yabai" -m config --space "$space" top_padding "$padding"
-      "$yabai" -m config --space "$space" bottom_padding "$padding"
-      "$yabai" -m config --space "$space" left_padding "$padding"
-      "$yabai" -m config --space "$space" right_padding "$padding"
-      "$yabai" -m config --space "$space" window_gap "$gap"
-    }
+    # This service does not load the scripting addition. Avoid building and
+    # embedding the arm64e payload, which does not link cleanly with lld.
+    preBuild = ''
+      printf '%s\n' \
+        'unsigned char __src_osax_payload[] = { 0 };' \
+        'unsigned int __src_osax_payload_len = 0;' \
+        > src/osax/payload_bin.c
+      printf '%s\n' \
+        'unsigned char __src_osax_loader[] = { 0 };' \
+        'unsigned int __src_osax_loader_len = 0;' \
+        > src/osax/loader_bin.c
+    '';
 
-    "$yabai" -m query --spaces \
-      | "$jq" -r '.[].index' \
-      | while read -r space; do
-        windows="$("$yabai" -m query --windows --space "$space" 2>/dev/null || printf '[]')"
-        tiled_count="$(printf '%s' "$windows" | "$jq" '[.[] | select(.["is-floating"] == false and .["is-minimized"] == false)] | length')"
-
-        if [ "$tiled_count" -le 1 ]; then
-          set_space_spacing "$space" 0 0
-        else
-          set_space_spacing "$space" 8 4
-        fi
-      done
-  '';
+    meta = oldAttrs.meta // {
+      homepage = "https://github.com/AhsanFazal/yabai";
+      changelog = "https://github.com/AhsanFazal/yabai/blob/63d2e10f475e299f20780b18ac2dfe523778195f/CHANGELOG.md";
+    };
+  });
 
   desktops = [
     "1"
@@ -47,7 +56,8 @@ let
   desktopBindings = builtins.concatStringsSep "\n" (
     map
       (desktop: ''
-        cmd + shift - ${desktop} : yabai -m window --space ${desktop}
+        ctrl - ${desktop} : yabai -m space --focus ${desktop}
+        ctrl + shift - ${desktop} : yabai -m window --space ${desktop} && yabai -m space --focus ${desktop}
       '')
       desktops
   );
@@ -56,6 +66,7 @@ in
   services.yabai = {
     enable = true;
     enableScriptingAddition = false;
+    package = yabaiFork;
 
     config = {
       layout = "bsp";
@@ -71,33 +82,24 @@ in
       mouse_modifier = "cmd";
       mouse_action1 = "move";
       mouse_action2 = "resize";
-      top_padding = 8;
-      bottom_padding = 8;
-      left_padding = 8;
-      right_padding = 8;
-      window_gap = 4;
+      top_padding = 0;
+      bottom_padding = 0;
+      left_padding = 0;
+      right_padding = 0;
+      window_gap = 0;
     };
 
     extraConfig = ''
       yabai -m rule --add app="^System Settings$" manage=off
       yabai -m rule --add app="^Calculator$" manage=off
       yabai -m rule --add title="Picture-in-Picture" manage=off sticky=on
-
-      ${singleWindowGaps}
-
-      yabai -m signal --add event=window_created action="${singleWindowGaps}"
-      yabai -m signal --add event=window_destroyed action="${singleWindowGaps}"
-      yabai -m signal --add event=window_moved action="${singleWindowGaps}"
-      yabai -m signal --add event=window_minimized action="${singleWindowGaps}"
-      yabai -m signal --add event=window_deminimized action="${singleWindowGaps}"
-      yabai -m signal --add event=space_changed action="${singleWindowGaps}"
     '';
   };
 
   services.skhd = {
     enable = true;
     skhdConfig = ''
-      cmd - return : open -na kitty --args -e tmux
+      cmd - return : open -na kitty
 
       cmd - h : yabai -m window --focus west
       cmd - j : yabai -m window --focus south
