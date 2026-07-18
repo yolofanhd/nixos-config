@@ -51,9 +51,9 @@ in
 
     kubernetes = {
       file = secret_prefix + /kubernetes.age;
-      path = "/home/${username}/.ssh/kubernetes.secret";
-      owner = username;
-      group = "users";
+      owner = "root";
+      group = "root";
+      mode = "0400";
     };
   };
 }

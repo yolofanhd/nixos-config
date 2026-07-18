@@ -4,21 +4,21 @@
 , username
 , system
 , hostName
-, includeHardwareConfig
+, hardwareConfig
 , isPi5
 , isNotMain
 , ...
 }:
 let
-  rootPrefix = ./../..;
   modulePrefix = ./../../modules;
 in
 {
   imports =
-    lib.optionals includeHardwareConfig
-      [
-        (rootPrefix + /hardware-configuration.nix)
-      ]
+    lib.optional (hardwareConfig != null) hardwareConfig
+    ++ lib.optional (hardwareConfig == null) {
+      # Pure evaluation has no machine-specific root filesystem.
+      boot.isContainer = true;
+    }
     ++ lib.optionals isPi5
       [
         ./pi5.nix
@@ -67,15 +67,16 @@ in
     inherit hostName;
     networkmanager.enable = true;
     firewall = {
-      enable = lib.mkForce false;
+      enable = true;
       allowedTCPPorts = [
         6443
-        2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
-        2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
+        10250
+      ]
+      ++ lib.optionals isPi5 [
+        2379
+        2380
       ];
-      allowedUDPPorts = [
-        8472
-      ];
+      allowedUDPPorts = [ 8472 ];
     };
     wireless = {
       enable = false;

@@ -9,42 +9,42 @@ rebuild:
 
     host="${HOST:?Set HOST in .env, for example HOST=macos or HOST=arithmancer}"
 
-    if [[ "$host" == "macos" || "$host" == "darwin" ]]; then
-      if ! sudo git config --global --get-all safe.directory | grep -Fxq "$PWD"; then
-        sudo git config --global --add safe.directory "$PWD"
-      fi
-      sudo darwin-rebuild switch --flake "./#macos"
-    else
-      ln -f /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
-      git add ./hardware-configuration.nix -f
-      trap 'git restore --staged hardware-configuration.nix || true' EXIT
-      sudo nixos-rebuild switch --flake "./#${host}"
-    fi
+    case "$host" in
+      macos|darwin)
+        sudo darwin-rebuild switch --flake "path:${PWD}#macos"
+        ;;
+      arithmancer|rpi4|rpi5)
+        hardware_config=/etc/nixos/hardware-configuration.nix
+        if [[ ! -r "$hardware_config" ]]; then
+          printf 'Required hardware configuration is not readable: %s\n' "$hardware_config" >&2
+          exit 1
+        fi
 
-# Runs nix flake check
+        export NIXOS_HARDWARE_CONFIG="$hardware_config"
+        sudo --preserve-env=NIXOS_HARDWARE_CONFIG \
+          nixos-rebuild switch --impure --flake "./#${host}"
+        ;;
+      *)
+        printf 'Unknown HOST %q. Expected macos, arithmancer, rpi4, or rpi5.\n' "$host" >&2
+        exit 1
+        ;;
+    esac
+
+# Checks formatting and evaluates every declared system without mutating the repository.
 test:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    touch hardware-configuration.nix
-    rm hardware-configuration.nix
-    echo "{" > hardware-configuration.nix
-    echo "nixpkgs.hostPlatform = \"x86_64-linux\";" >> hardware-configuration.nix
-
-    echo "fileSystems.\"/\" = {" >> hardware-configuration.nix
-    echo "device = \"/dev/null\";" >> hardware-configuration.nix
-    echo "fsType = \"ext4\";" >> hardware-configuration.nix
-    echo "};" >> hardware-configuration.nix
-
-    echo "fileSystems.\"/boot\" = {" >> hardware-configuration.nix
-    echo "device = \"/dev/null\";" >> hardware-configuration.nix
-    echo "fsType = \"vfat\";" >> hardware-configuration.nix
-    echo "};" >> hardware-configuration.nix
-
-    echo "}" >> hardware-configuration.nix
-    git add ./hardware-configuration.nix -f
-    trap 'git restore --staged hardware-configuration.nix || true' EXIT
-    nix flake check
+    nix fmt -- --check .
+    nix flake check --no-build
+    nix eval --raw .#darwinConfigurations.macos.config.system.build.toplevel.drvPath
+    printf '\n'
+    nix eval --raw .#nixosConfigurations.arithmancer.config.system.build.toplevel.drvPath
+    printf '\n'
+    nix eval --raw .#nixosConfigurations.rpi4.config.system.build.toplevel.drvPath
+    printf '\n'
+    nix eval --raw .#nixosConfigurations.rpi5.config.system.build.toplevel.drvPath
+    printf '\n'
 
 # Runs nix flake update & just rebuild
 update:

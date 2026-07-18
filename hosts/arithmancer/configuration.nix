@@ -1,24 +1,88 @@
-{
-  pkgs,
-  inputs,
-  lib,
-  username,
-  system,
-  config,
-  includeHardwareConfig,
-  ...
+{ pkgs
+, inputs
+, lib
+, username
+, system
+, config
+, hardwareConfig
+, ...
 }:
 let
   rootPrefix = ./../..;
   modulePrefix = rootPrefix + /modules;
+  packageModule = {
+    fonts.packages = with pkgs; [
+      nerd-fonts.fantasque-sans-mono
+    ];
+
+    environment = {
+      shells = [ pkgs.zsh ];
+      systemPackages = with pkgs; [
+        btop
+        clang
+        cmake
+        docker
+        gcc
+        ghostscript
+        git
+        htop
+        inputs.agenix.packages.${system}.default
+        inputs.pwndbg.packages.${system}.default
+        mermaid-cli
+        pinentry-curses
+        polkit
+        polkit_gnome
+        prusa-slicer
+        python3
+        sbctl
+        tree
+        unzip
+        vim
+        wget
+      ];
+    };
+
+    users.users.${username}.packages = with pkgs; [
+      anki-bin
+      blender
+      cheat
+      discord
+      docker
+      gimp
+      google-chrome
+      inputs.waybar.packages.${system}.default
+      inputs.zen-browser.packages.${system}.default
+      just
+      obs-studio
+      obsidian
+      signal-desktop
+      slurp
+      spotify
+      steam
+      inputs.nixpkgs.legacyPackages.${system}.awww
+      texliveFull
+      vscodium
+      wayvnc
+      wayshot
+      wl-clipboard
+      yubioath-flutter
+      zathura
+      zip
+    ];
+  };
 in
 {
   imports =
-    lib.optionals includeHardwareConfig [
-      (rootPrefix + /hardware-configuration.nix)
+    lib.optionals (hardwareConfig != null) [
+      hardwareConfig
       (modulePrefix + /nixos/boot.nix)
     ]
+    ++ lib.optional (hardwareConfig == null) {
+      # Pure evaluation has no machine-specific filesystems or boot loader.
+      boot.isContainer = true;
+    }
     ++ [
+      packageModule
       (modulePrefix + /nixos/agenix.nix)
       (modulePrefix + /nixos/wayland.nix)
       (modulePrefix + /nixos/sound.nix)
@@ -34,37 +98,6 @@ in
       inputs.home-manager.nixosModules.default
     ];
 
-  fonts.packages = with pkgs; [
-    nerd-fonts.fantasque-sans-mono
-  ];
-
-  environment = {
-    shells = [ pkgs.zsh ];
-    systemPackages = with pkgs; [
-      btop
-      prusa-slicer
-      cmake
-      docker
-      gcc
-      clang
-      ghostscript
-      git
-      htop
-      mermaid-cli
-      pinentry-curses
-      polkit
-      polkit_gnome
-      python3
-      sbctl
-      tree
-      unzip
-      vim
-      wget
-      inputs.agenix.packages.${system}.default
-      inputs.pwndbg.packages.${system}.default
-    ];
-  };
-
   users = {
     defaultUserShell = pkgs.zsh;
     users.${username} = {
@@ -73,35 +106,6 @@ in
       extraGroups = [
         "wheel"
         "docker"
-      ];
-      initialPassword = "nixos";
-      packages = with pkgs; [
-        anki-bin
-        #bitwarden
-        blender
-        cheat
-        discord
-        docker
-        gimp
-        inputs.zen-browser.packages.${system}.default
-        just
-        obs-studio
-        obsidian # note taking app
-        signal-desktop
-        slurp # for screenshotting in wayland cli tool
-        spotify
-        steam
-        swww # background images
-        texlive.combined.scheme-full
-        google-chrome
-        vscodium
-        inputs.waybar.packages.${system}.default
-        wayvnc
-        wayshot # for screenshotting in wayland cli tool
-        wl-clipboard
-        yubioath-flutter
-        zathura # pdf reader
-        zip
       ];
     };
   };

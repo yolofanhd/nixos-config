@@ -1,4 +1,6 @@
-{ pkgs, ... }: {
+{ lib, pkgs, ... }: {
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
   programs.zsh = {
     enable = true;
     autocd = true;
@@ -48,8 +50,8 @@
         autoTitle = true;
       };
       tmux = {
-        autoStartLocal = true;
-        autoStartRemote = true;
+        autoStartLocal = lib.mkDefault true;
+        autoStartRemote = lib.mkDefault true;
         defaultSessionName = "main";
       };
       utility.safeOps = true;

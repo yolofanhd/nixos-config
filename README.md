@@ -1,225 +1,150 @@
-# My nixos config
+<p align="center">
+  <a href="https://nixos.org">
+    <picture>
+      <source media="(prefers-color-scheme: light)" srcset="https://brand.nixos.org/logos/nixos-logo-rainbow-gradient-black-regular-horizontal-minimal.svg">
+      <source media="(prefers-color-scheme: dark)" srcset="https://brand.nixos.org/logos/nixos-logo-rainbow-gradient-white-regular-horizontal-minimal.svg">
+      <img src="https://brand.nixos.org/logos/nixos-logo-rainbow-gradient-black-regular-horizontal-minimal.svg" width="500px" alt="NixOS logo">
+    </picture>
+  </a>
+</p>
 
-This is my nixos config. It's intended for the use of 2 main devices and one raspberry pi 5.
-Support for kubernetes and multiple raspis is planned in near future.
+<h1 align="center">Nix systems configuration</h1>
 
-## Project structure
+<p align="center">
+  <a href="https://github.com/yolofanhd/nixos-config/actions/workflows/flake-check.yml">
+    <img src="https://github.com/yolofanhd/nixos-config/actions/workflows/flake-check.yml/badge.svg?branch=main" alt="Validation status">
+  </a>
+  <a href="https://nixos.org">
+    <img src="https://img.shields.io/badge/Nix-Flakes-5277C3?logo=nixos&logoColor=white" alt="Nix flakes">
+  </a>
+  <img src="https://img.shields.io/badge/platforms-aarch64--darwin%20%7C%20aarch64--linux%20%7C%20x86__64--linux-555555" alt="Supported platforms">
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license">
+  </a>
+</p>
 
-- **hosts**\
-  contain a basic setup for each host (e.g. notebook, pc, etc.)\
-  the goal is to keep those configurations at a bare minimum and import everything thats needed from other modules
+This flake manages one nix-darwin workstation and three NixOS hosts. Host files
+are composition roots; reusable operating-system and Home Manager concerns live
+under `modules/`, while machine-specific application choices stay with their
+host.
 
-- **modules**\
-  contain a basic setup for application and their configurations
-  - **home**\
-    contains setup for home-manager specific stuff
+## Hosts
 
-## Installation and setup
+| Flake output  | Platform         | Role                                       |
+| ------------- | ---------------- | ------------------------------------------ |
+| `macos`       | `aarch64-darwin` | macOS workstation managed by nix-darwin    |
+| `arithmancer` | `x86_64-linux`   | NixOS desktop with Hyprland and Lanzaboote |
+| `rpi5`        | `aarch64-linux`  | Raspberry Pi 5 and primary k3s server      |
+| `rpi4`        | `aarch64-linux`  | Raspberry Pi 4 and k3s agent               |
 
-As this configuration utilizes flakes it is fairly simple to install and setup.
+## Repository layout
 
-1. Clone this repo
+- `hosts/` composes each system and contains host-specific package policy.
+- `modules/darwin/` contains reusable nix-darwin services and defaults.
+- `modules/nixos/` contains reusable NixOS services and hardware-independent
+  policy.
+- `modules/home/` contains shared Home Manager program configuration.
+- `packages/` contains locally packaged software.
+- `secrets/` contains Agenix declarations and encrypted payloads only.
 
-```bash
-git clone https://github.com/yolofanhd/nixos-config
-cd nixos-config
+## Validation
+
+Enter the pinned development environment before running project commands:
+
+```sh
+nix develop
+just test
 ```
 
-> [!NOTE]
-> Optional: If you just want everything to work right away I would suggest to also
-> `git checkout stable`. This branch is updated less frequently and is checked a lot
-> better. The main branch is used as the dev branch and can sometimes be unstable due
-> to dependency updates or breaking changes for multiple hosts, which often wouldn't
-> be noticed right away.
+`just test` checks formatting, runs `nix flake check --no-build`, and evaluates
+the top-level derivation for every declared NixOS and nix-darwin host. It does
+not create files or alter the Git index. The equivalent individual commands are:
 
-2. Copy the `.env.sample` and adjust the host according to `flake.nix`.
+```sh
+nix fmt -- --check .
+nix flake check --no-build
+```
 
-```bash
+Pure evaluation deliberately excludes machine-generated filesystem and boot
+configuration. It uses each host's explicit platform and an evaluation-only
+container boundary, so a checkout can be validated on any supported machine
+without a fake `hardware-configuration.nix`.
+
+## Rebuilding
+
+Copy the environment template and select a declared host:
+
+```sh
 cp .env.sample .env
-vi .env
+$EDITOR .env
+nix develop --command just rebuild
 ```
 
-3. On NixOS, check if `/etc/nixos/hardware-configuration.nix` is present. If not run:
+For NixOS hosts, `just rebuild` requires a readable
+`/etc/nixos/hardware-configuration.nix`, passes it through
+`NIXOS_HARDWARE_CONFIG`, and enables impure evaluation only for the activation.
+The hardware file is never copied into this repository. The equivalent manual
+command is:
 
-```bash
-nixos-generate-config
+```sh
+export NIXOS_HARDWARE_CONFIG=/etc/nixos/hardware-configuration.nix
+sudo --preserve-env=NIXOS_HARDWARE_CONFIG \
+  nixos-rebuild switch --impure --flake .#arithmancer
 ```
 
-This step is not needed on Darwin.
+On macOS, select `HOST=macos`; the recipe runs:
 
-4. Rebuild the system
-
-```bash
-just rebuild
+```sh
+sudo darwin-rebuild switch --flake "path:$PWD#macos"
 ```
 
-### Updating the configuration
+`just update` updates `flake.lock` and then rebuilds the selected host. Review
+dependency changes before activation.
 
-The following command updates the flake and rebuilds the host configured in `.env`.
+## Credentials and first installation
 
-```bash
-just update
+The configuration intentionally contains no initial login password or password
+hash. NixOS keeps mutable password management enabled, so existing passwords
+remain valid across rebuilds. During a fresh installation, set the user password
+from the installer before rebooting:
+
+```sh
+sudo nixos-enter --root /mnt -c 'passwd fractalix'
 ```
 
-For manual rebuilds, use the matching command for the platform:
+Agenix stores only encrypted files in Git. Recipient declarations are in
+`secrets/secrets.nix`; decrypted paths and ownership are declared by the Agenix
+modules. Edit a secret using an authorized identity, for example:
 
-```bash
-sudo nixos-rebuild switch --flake './#<host-name>'
-darwin-rebuild switch --flake './#macos'
+```sh
+nix develop --command agenix -e secrets/kubernetes.age
 ```
 
-For more information look at: [NixOS docs](https://nixos.wiki/wiki/flakes)
+Never interpolate decrypted values into Nix strings. k3s consumes its credential
+through the runtime `tokenFile` option, and the decrypted token is root-readable
+only.
 
-### Darwin
+## Security-sensitive defaults
 
-Set `HOST=macos` in `.env`, then run:
+- The Raspberry Pi firewall is enabled. k3s permits `6443/tcp` for the API,
+  `10250/tcp` for kubelet, and `8472/udp` for Flannel VXLAN. The primary server
+  additionally permits `2379-2380/tcp` for embedded etcd.
+- The arithmancer secure-boot policy is loaded only with its real hardware
+  configuration. Follow the upstream Lanzaboote quick start before enabling it
+  on a new installation.
+- Unfree packages are allowed because the declared workstation application sets
+  require them. Package selection remains explicit in host-local modules.
+- Host selection from `.env` is validated before any privileged activation, and
+  `sudo` is restricted to the rebuild command.
 
-```bash
-just rebuild
-```
+No workflow in this repository activates a system automatically. Inspect the
+diff and run `just test` before choosing to rebuild.
 
-This runs:
+## Contributing and security
 
-```bash
-darwin-rebuild switch --flake './#macos'
-```
+Contributions are welcome when they preserve the repository's host-oriented
+architecture. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the validation and
+submission workflow.
 
-If `darwin-rebuild` is not on your `PATH` yet, restart the terminal after the first
-nix-darwin activation.
-
-### Agenix
-
-Agenix is used as the secret manager. You can add any ssh key to `/secrets/secrets.nix` add the file you want to add to the list and run
-
-```bash
-cd ./secrets
-agenix -e <filename>
-```
-
-Then the secrets can be decrypted when rebuilding using the `modules/nixos/agenix.nix` file where you specify location and access rules for your file.
-
-### Raspberry pi 5 Setup
-
-There already is a great documentation [here](https://wiki.nixos.org/wiki/NixOS_on_ARM/Raspberry_Pi_5).\
-None the less a quick guide:
-
-#### Requirements
-
-Requirements are only needed for this guide, the process can be probably highly optimised but I found this
-one the easiest approach
-
-- Rpi5 (with peripherals (e.g. display and keyboard))
-- SD card
-- USB stick
-- another machine
-
-#### Setting up UEFI and the sd card
-
-1. Create a gpt partition table
-2. Create an efi (fat32) partition
-3. Create a linux partition for nixos (could be done within the nixos installation step)
-4. Format the partitions
-   - fat32 for boot partition
-   - ext4 for linux partition
-5. Mount the boot partition
-6. Look at this [repo](https://github.com/worproject/rpi5-uefi) and get the latest release
-7. Copy the 3 files from the release into the boot partition
-8. (Optional) Adjust the config.txt if needed
-9. Insert the sd card into the raspi and check if the uefi menu shows up correctly (might need to hit esc)
-
-#### Prepare the booting device
-
-1. Get the [lates release](https://hydra.nixos.org/job/nixos/trunk-combined/nixos.iso_minimal_new_kernel_no_zfs.aarch64-linux)
-   or look at this [guide](https://wiki.nixos.org/wiki/NixOS_on_ARM/UEFI)
-2. Plug in the usb
-3. Flash the iso onto the usb stick
-
-#### Launch installation media
-
-1. Plug the installation stick into your raspi
-2. Boot the raspi
-3. (Optional) Adjust any uefi settings if needed (e.g. boot order)
-4. Launch nixos installation
-
-#### Install nixos
-
-Once this stage is reached you might also continue with the normal installation instructions.
-Allthough there are a few options that have to be set:
-
-```nix
-  boot.loader.efi.canTouchEfiVariables = false;
-  boot.kernelPackages = (import (builtins.fetchTarball https://gitlab.com/vriska/nix-rpi5/-/archive/main.tar.gz)).legacyPackages.aarch64-linux.linuxPackages_rpi5;
-```
-
-the second setting can also be implemented by using the flake directly like this config does.
-
-When everything is in place hit nixos-install! Note: This might take a while
-
-#### Post-Installation
-
-This is really important in order to be able to boot nixos.
-
-1. Open up the uefi by hitting esc.
-2. Go into Device Manager -> Raspberry Pi Configuration -> ACPI / Device Tree -> System Table Mode
-3. Change it from ACPI to Device Tree
-   Once thats done, feel free to boot nixos!
-
-After everything works and is correctly set up you might also revisit some guides and configs to ensure
-that everything is set up as it should be. For example you might want to set `force_turbo=1` to `0`
-in the `/boot/config.txt` file.
-
-### Secure boot with lanzaboote
-
-[Official Guide](https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md)
-
-Secure is still experimental, but I found it to work quite well.
-Here is a step by step introction:
-
-1. `sudo sbctl create-keys`
-2. Add lanzaboote to the nix config. (example in [boot.nix](./modules/nixos/boot.nix))
-3. `sudo sbctl verify` and verify that the boot entries which are relevant are signed.
-4. Reboot into your UEFI/BIOS and enable SecureBoot and enable Boot Setup mode
-5. Boot the system and enroll the keys `sudo sbctl enroll-keys --microsoft`
-6. Reboot the system (Boot Setup mode should be automagically disabled)
-7. Check if everything is correctly setup with `bootctl status`
-
-### disk encryption with nixos
-
-Check out these 2 guides:
-[NixOS Wiki](https://nixos.wiki/wiki/Full_Disk_Encryption),
-[NixOS with encrypted root](https://gist.github.com/martijnvermaat/76f2e24d0239470dd71050358b4d5134)\
-
-A quick summary:
-
-1. Get your nixos usb stick and boot up the installation media
-2. Create the encrypted partition using `cryptsetup luksFormat /dev/sda2` and open it with `cryptsetup luksOpen /dev/sda2 enc-pv`
-3. Create logical volumes on the created partition
-   - `pvcreate /dev/mapper/enc-pv`
-   - `vgcreate vg /dev/mapper/enc-pv`
-   - Create swap `lvcreate -L 8G -n swap vg`
-   - Create root `lvcreate -l '100%FREE' -n root vg`
-4. Format the partitions
-   - `mkfs.fat /dev/sda1`
-   - Format encrypted root volume `mkfs.ext4 -L root /dev/vg/root`
-   - Format encrypted swap volume `mkswap -L swap /dev/vg/swap`
-5. Mount the volumes
-   - `mount /dev/vg/root /mnt`
-   - `mkdir /mnt/boot`
-   - `mount /dev/sda1 /mnt/boot`
-   - `swapon /dev/vg/swap`
-6. Proceed with the usual installation
-
-> [!NOTE]
-> Keep in mind when troubleshooting that the luks device needs to be open.
-> Once created it can be opened with the second command mentioned in step 2.
-> When working with the volumes keep in mind that the name doesn't match with the
-> physical partition name, so just be sure to always use the provided name from
-> the mapper!\
-> There also is another setting for encrypted devices in the [boot.nix](./modules/nixos/boot.nix)
-> file. It just ensures that the device is used and can safely be ignored due to automatic
-> generation. (e.g. the same setting is set anyway in `hardware-configuration.nix`)
-
-## Contribution guidelines
-
-This repository uses [convetional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).<br/>
-Just feel free to leave a PR and I might merge it! :D
+Do not open public issues for suspected vulnerabilities or exposed sensitive
+data. Follow [SECURITY.md](./SECURITY.md) instead.

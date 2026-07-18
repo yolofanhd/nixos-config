@@ -1,18 +1,19 @@
-{
-  lib,
-  pkgs,
-  username,
-  modulePrefix,
-  ...
+{ pkgs
+, username
+, modulePrefix
+, ...
 }:
 let
   prefix = modulePrefix + /home;
 in
 {
   imports = [
+    (prefix + /btop.nix)
     (prefix + /tmux.nix)
     (prefix + /zsh.nix)
     (prefix + /kitty.nix)
+    (prefix + /nvim.nix)
+    (prefix + /ssh.nix)
     (prefix + /zathura.nix)
   ];
 
@@ -21,35 +22,15 @@ in
     copyApps.enable = false;
   };
 
-  programs.btop = {
-    enable = true;
-    settings = {
-      color_theme = "gruvbox_dark";
-      theme_background = false;
-    };
-  };
-
   programs.zsh.prezto.tmux = {
-    autoStartLocal = lib.mkForce false;
-    autoStartRemote = lib.mkForce false;
-  };
-
-  programs.ssh = {
-    enable = true;
-    matchBlocks.github = {
-      host = "github.com";
-      hostname = "github.com";
-      user = "git";
-      identityFile = "/Users/${username}/.ssh/github-ssh";
-      identitiesOnly = true;
-    };
+    autoStartLocal = false;
+    autoStartRemote = false;
   };
 
   home = {
     inherit username;
     homeDirectory = "/Users/${username}";
     packages = with pkgs; [
-      btop
       tmux
       zsh
     ];

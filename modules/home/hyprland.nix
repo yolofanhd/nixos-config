@@ -1,7 +1,6 @@
-{
-  monitor,
-  username,
-  ...
+{ monitor
+, username
+, ...
 }:
 {
   services.hypridle = {
@@ -100,6 +99,7 @@
   };
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "hyprlang";
     systemd.enable = true;
     xwayland.enable = true;
     settings = {
@@ -126,14 +126,14 @@
         "WLR_NO_HARDWARE_CURSORS,1"
       ];
       exec-once = [
-        "swww-daemon"
+        "awww-daemon"
         "waybar"
         "[ workspace 1 silent ] kitty -e tmux"
         "[ workspace 1 silent ] zen-beta"
         "[ workspace 3 silent ] spotify"
         "[ workspace 3 silent ] discord"
         "[ workspace 3 silent ] signal-desktop"
-        "swww img /home/${username}/Pictures/wallpaper.png"
+        "awww img /home/${username}/Pictures/wallpaper.png"
         "hyprctl output create headless"
         "wayvnc 0.0.0.0"
       ];

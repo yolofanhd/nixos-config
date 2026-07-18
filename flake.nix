@@ -71,6 +71,13 @@
     , ...
     } @ inputs:
     let
+      hardwareConfigPath = builtins.getEnv "NIXOS_HARDWARE_CONFIG";
+      hardwareConfig =
+        if hardwareConfigPath == "" then
+          null
+        else
+          builtins.toPath hardwareConfigPath;
+
       supportedSystems = [
         "aarch64-darwin"
         "aarch64-linux"
@@ -88,10 +95,13 @@
         {
           default = pkgs.mkShell {
             packages = with pkgs; [
+              agenix.packages.${system}.default
               bash
+              gh
               git
               just
               nix
+              python3
             ];
           };
         }
@@ -110,9 +120,10 @@
       };
       nixosConfigurations = {
         arithmancer = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
           specialArgs = {
             inherit inputs;
-            includeHardwareConfig = true;
+            inherit hardwareConfig;
             system = "x86_64-linux";
             hostName = "arithmancer";
             username = "fractalix";
@@ -128,7 +139,7 @@
           system = "aarch64-linux";
           specialArgs = {
             inherit inputs;
-            includeHardwareConfig = true;
+            inherit hardwareConfig;
             isPi5 = true;
             isNotMain = false;
             system = "aarch64-linux";
@@ -145,7 +156,7 @@
           system = "aarch64-linux";
           specialArgs = {
             inherit inputs;
-            includeHardwareConfig = true;
+            inherit hardwareConfig;
             isPi5 = false;
             isNotMain = true;
             system = "aarch64-linux";
