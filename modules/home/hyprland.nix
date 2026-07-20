@@ -1,8 +1,7 @@
 { monitor
 , username
 , ...
-}:
-{
+}: {
   services.hypridle = {
     enable = true;
     settings = {
@@ -131,18 +130,10 @@
         "[ workspace 1 silent ] kitty -e tmux"
         "[ workspace 1 silent ] zen-beta"
         "[ workspace 3 silent ] spotify"
-        "[ workspace 3 silent ] discord"
         "[ workspace 3 silent ] signal-desktop"
         "awww img /home/${username}/Pictures/wallpaper.png"
         "hyprctl output create headless"
         "wayvnc 0.0.0.0"
-      ];
-      windowrule = [
-        "workspace 3 silent, class:^(.*iscord.*)$, title:^(.*iscord.*)$"
-        "float, title:^(.*Yubico Authenticator.*)$"
-        "size 360 700, title:^(.*Yubico Authenticator.*)$"
-        "float, title:^(Picture-in-Picture)$"
-        "pin, title:^(Picture-in-Picture)$"
       ];
       general = {
         gaps_in = 0;
@@ -216,7 +207,6 @@
         ];
       };
       dwindle = {
-        pseudotile = true; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
         preserve_split = true; # you probably want this
       };
 
@@ -277,8 +267,6 @@
         "$mainMod SHIFT,9,movetoworkspace,9"
 
         "$mainMod,SPACE,togglefloating,"
-        "$mainMod,equals,splitratio,+"
-        "$mainMod,minus,splitratio,-"
         "$mainMod,P,pseudo,"
         # Scroll through existing workspaces with mainMod + scroll"
         "bind = $mainMod, mouse_down, workspace, e+1"
